@@ -48,4 +48,10 @@ public class ItemServiceImpl implements ItemService {
         log.info("Получение списка всех предметов пользователя с id " + userId);
         return itemRepository.getUserItems(userId);
     }
+
+    @Override
+    public boolean isItemExists(int itemId) {
+        log.info("Проверка существовария предмета с id " + itemId);
+        return itemRepository.isItemExists(itemId);
+    }
 }

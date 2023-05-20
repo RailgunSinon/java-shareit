@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.repository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +44,14 @@ public class ItemRepositoryImpl implements ItemRepository {
         return items.values().stream()
             .filter(user -> user.getUserId() == userId)
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isItemExists(int itemId) {
+        if(items.containsKey(itemId)){
+            return true;
+        }
+        return false;
     }
 
 }

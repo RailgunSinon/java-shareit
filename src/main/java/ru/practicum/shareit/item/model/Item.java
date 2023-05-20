@@ -1,5 +1,8 @@
 package ru.practicum.shareit.item.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,9 +18,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Item {
+    @PositiveOrZero
     int id;
+    @Positive
     int userId;
+    @NotBlank
     String name;
+    @NotBlank
     String description;
     boolean available;
 }

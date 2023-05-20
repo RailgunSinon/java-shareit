@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) {
-        log.info("Изменеие пользователя с id" + user.getId());
+        log.info("Изменение пользователя с id " + user.getId());
         userRepository.updateUser(user);
     }
 
@@ -38,13 +38,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(int userId) {
-        log.info("Получение пользователя с id" + userId);
+        log.info("Получение пользователя с id " + userId);
         return userRepository.getUserById(userId);
     }
 
     @Override
     public void deleteUserById(int userId) {
-        log.info("Удаление пользователя с id" + userId);
+        log.info("Удаление пользователя с id " + userId);
         userRepository.deleteUserById(userId);
+    }
+
+    @Override
+    public boolean isUserExists(int userId) {
+        log.info("Запрос существования пользователя с id " + userId);
+        return userRepository.isUserExists(userId);
     }
 }

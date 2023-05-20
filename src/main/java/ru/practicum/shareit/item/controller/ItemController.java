@@ -25,10 +25,15 @@ import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.user.controller.UserController;
+import ru.practicum.shareit.user.service.UserService;
 
 /**
  * TODO Sprint add-controllers.
  */
+//Пока у нас нет БД, приходится напрямую прокидывать сервис со статикой.
+//Когда подключу базу поменяю на интеграцию сервиса(заработает метод проверки существования).
+
 @RestController
 @RequestMapping("/items")
 @Slf4j
@@ -36,26 +41,35 @@ public class ItemController {
 
     private final ItemService itemService;
     private final ModelMapper modelMapper = new ModelMapper();
-    private int idCounter = 1;
+    private static int idCounter = 1;
+    private final UserService userService;
 
     @Autowired
-    public ItemController(ItemService itemService) {
+    public ItemController(ItemService itemService, UserService userService) {
         this.itemService = itemService;
+        this.userService = userService;
     }
 
     @PostMapping
-    public ItemDto addItem(@Valid @RequestBody ItemDto itemDto){
+    public ItemDto addItem(@Valid @RequestBody ItemDto itemDto,
+    @RequestHeader("X-Sharer-User-Id")  int userId){
         log.debug("Получен запрос на добавление предмета");
-        Item item = convertToEntity(itemDto,idCounter++);
+        if(!userService.isUserExists(userId)){
+            throw new NotFoundException("Пользователь не найден!");
+        }
+        Item item = convertToEntity(itemDto,idCounter++,userId);
         itemService.addItem(item);
         return convertToDto(itemService.getItem(item.getId()));
     }
 
     @PutMapping
-    public ItemDto updateItem(@Valid @RequestBody ItemDto itemDto,
-    @RequestParam(required = false) int itemId){
+    public ItemDto updateItem(@RequestBody ItemDto itemDto,
+    @RequestParam(required = false) int itemId,@RequestHeader("X-Sharer-User-Id")  int userId){
         log.debug("Получен запрос на обновление предмета c id " + itemId);
-        Item item = convertToEntity(itemDto,itemId);
+        if(!userService.isUserExists(userId)){
+            throw new NotFoundException("Пользователь не найден!");
+        }
+        Item item = convertToEntity(itemDto,itemId,userId);
         itemService.updateItem(item);
         return convertToDto(itemService.getItem(itemId));
     }
@@ -77,7 +91,7 @@ public class ItemController {
 
 
     @GetMapping
-    public List<ItemDto> getAllUserItems(@RequestParam int userId){
+    public List<ItemDto> getAllUserItems(@RequestHeader("X-Sharer-User-Id")  int userId){
         log.debug("Получен запрос на получение всех предметов пользователя с id" + userId);
         ArrayList<Item> items = new ArrayList<>(itemService.getUserItems(userId));
         return convertToDtoListOfItems(items);
@@ -97,9 +111,27 @@ public class ItemController {
         return itemDtos;
     }
 
-    private Item convertToEntity(ItemDto itemDto,int itemId){
+    private Item convertToEntity(ItemDto itemDto,int itemId,int userId){
         Item item = modelMapper.map(itemDto,Item.class);
         item.setId(itemId);
+        item.setUserId(userId);
+        Item oldItem;
+
+        log.info("-----------------------------");
+        log.info(item.toString());
+
+        if(itemService.isItemExists(itemId)){
+            oldItem = itemService.getItem(itemId);
+            if(item.getName() == null){
+                item.setName(oldItem.getName());
+            }
+            if(item.getDescription() == null){
+                item.setDescription(oldItem.getDescription());
+            }
+        }
+
+        log.info(item.toString());
+
         return item;
     }
 

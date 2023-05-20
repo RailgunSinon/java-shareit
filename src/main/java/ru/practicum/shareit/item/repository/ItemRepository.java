@@ -14,4 +14,6 @@ public interface ItemRepository {
     List<Item> getItemsByUserSearch(String text,int userId);
 
     List<Item> getUserItems(int userId);
+
+    boolean isItemExists(int itemId);
 }

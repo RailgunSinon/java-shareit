@@ -4,16 +4,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.exceptions.AlreadyExistsException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.model.User;
+
+//Пока нет БД приходится делать статику под тесты. Иначе не проверить наличие пользователя из
+//контроллера предметов
 
 @Component
 public class UserRepositoryImpl implements UserRepository {
 
-    private final HashMap<Integer, User> users = new HashMap<>();
+    private static final HashMap<Integer, User> users = new HashMap<>();
 
     @Override
     public void addUser(User user) {
+        if(emailExists(user.getEmail())){
+            throw new AlreadyExistsException("Пользователь с таким email уже существует");
+        }
         if (!users.containsKey(user.getId())) {
             users.put(user.getId(), user);
         }
@@ -23,6 +30,9 @@ public class UserRepositoryImpl implements UserRepository {
     public void updateUser(User user) {
         if (!users.containsKey(user.getId())) {
             throw new NotFoundException("Пользователь с таким id не был найден");
+        }
+        if(emailExists(user.getEmail(),user)){
+            throw new AlreadyExistsException("Пользователь с таким email уже существует");
         }
         users.put(user.getId(), user);
     }
@@ -47,4 +57,34 @@ public class UserRepositoryImpl implements UserRepository {
         }
         users.remove(userId);
     }
+
+    @Override
+    public boolean isUserExists(int userId) {
+        if(users.containsKey(userId))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean emailExists(String email){
+        for(User user : users.values()){
+            if(user.getEmail().toLowerCase().equals(email.toLowerCase())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean emailExists(String email,User userForUpdate){
+        HashMap<Integer, User> updateUsers = new HashMap<>(users);
+        updateUsers.remove(userForUpdate.getId());
+        for(User user : updateUsers.values()){
+            if(user.getEmail().toLowerCase().equals(email.toLowerCase())){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

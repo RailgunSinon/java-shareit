@@ -12,14 +12,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.shareit.exceptions.AlreadyExistsException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
@@ -35,7 +35,7 @@ public class UserController {
 
     private final UserService userService;
     private final ModelMapper modelMapper = new ModelMapper();
-    private int idCounter = 1;
+    private static int idCounter = 1;
 
     @Autowired
     public UserController(UserService userService) {
@@ -45,26 +45,27 @@ public class UserController {
     @PostMapping
     public UserDto addUser(@Valid @RequestBody UserDto userDto) {
         log.debug("Получен запрос на добавление пользователя");
-        User user = convertToEntity(userDto,idCounter++);
+        User user = convertToEntity(userDto, idCounter);
         userService.addUser(user);
+        idCounter++;
         return convertToDto(userService.getUserById(user.getId()));
     }
 
-    @PutMapping
-    public UserDto updateUser(@Valid @RequestBody UserDto userDto,
-        @RequestParam(required = false) int userId) {
+    @PatchMapping("/{userId}")
+    public UserDto updateUser(@RequestBody UserDto userDto,
+        @PathVariable int userId) {
         log.debug("Получен запрос на обновление пользователя");
-        User user = convertToEntity(userDto,userId);
+        User user = convertToEntity(userDto, userId);
         userService.updateUser(user);
         return convertToDto(userService.getUserById(user.getId()));
     }
 
     @GetMapping
-    public List<UserDto> getAllUsers(){
+    public List<UserDto> getAllUsers() {
         log.debug("Получен запрос на получение всех пользователей");
         ArrayList<User> users = new ArrayList<>(userService.getAllUsers());
         ArrayList<UserDto> userDtos = new ArrayList<>();
-        for(User user : users){
+        for (User user : users) {
             userDtos.add(convertToDto(user));
         }
         return userDtos;
@@ -103,6 +104,14 @@ public class UserController {
         return Map.of("Что-то пошло не так", exception.getMessage());
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Map<String, String> handleAlreadyExistsException(
+        final AlreadyExistsException exception) {
+        log.error("Пользователь уже сущетсвует!");
+        return Map.of("Пользователь уже сущетсвует!", exception.getMessage());
+    }
+
     private UserDto convertToDto(User user) {
         UserDto userDto = modelMapper.map(user, UserDto.class);
         return userDto;
@@ -111,6 +120,19 @@ public class UserController {
     private User convertToEntity(UserDto userDto, int userId) {
         User user = modelMapper.map(userDto, User.class);
         user.setId(userId);
+        User oldUser;
+
+        if(userService.isUserExists(userId)){
+            oldUser = userService.getUserById(userId);
+            if(user.getEmail() == null){
+                user.setEmail(oldUser.getEmail());
+            }
+            if(user.getName() == null){
+                user.setName(oldUser.getName());
+            }
+
+        }
+
         return user;
     }
 
