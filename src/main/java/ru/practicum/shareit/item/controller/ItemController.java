@@ -127,7 +127,6 @@ public class ItemController {
                 item.setAvailable(oldItem.getAvailable());
             }
         }
-
         return item;
     }
 
