@@ -26,5 +26,5 @@ public class Item {
     String name;
     @NotBlank
     String description;
-    boolean available;
+    Boolean available;
 }

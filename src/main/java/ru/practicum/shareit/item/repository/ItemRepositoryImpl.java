@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,9 +33,13 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> getItemsByUserSearch(String text, int userId) {
+        if (text.isBlank()){
+            return new ArrayList<>();
+        }
         return items.values().stream()
-            .filter(user -> (user.getDescription().contains(text) || user.getName().contains(text))
-            && user.isAvailable() == true && user.getUserId() == userId)
+            .filter(user -> user.getAvailable() == true)
+            .filter(user -> (user.getDescription().toLowerCase().contains(text.toLowerCase())
+                || user.getName().toLowerCase().contains(text.toLowerCase())))
             .collect(Collectors.toList());
     }
 

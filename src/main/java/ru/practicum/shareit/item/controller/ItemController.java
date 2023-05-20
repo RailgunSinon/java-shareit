@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -62,9 +63,9 @@ public class ItemController {
         return convertToDto(itemService.getItem(item.getId()));
     }
 
-    @PutMapping
+    @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestBody ItemDto itemDto,
-    @RequestParam(required = false) int itemId,@RequestHeader("X-Sharer-User-Id")  int userId){
+        @PathVariable int itemId,@RequestHeader("X-Sharer-User-Id")  int userId){
         log.debug("Получен запрос на обновление предмета c id " + itemId);
         if(!userService.isUserExists(userId)){
             throw new NotFoundException("Пользователь не найден!");
@@ -117,20 +118,23 @@ public class ItemController {
         item.setUserId(userId);
         Item oldItem;
 
-        log.info("-----------------------------");
-        log.info(item.toString());
-
         if(itemService.isItemExists(itemId)){
             oldItem = itemService.getItem(itemId);
+
+            if (oldItem.getUserId() != userId){
+                throw new NotFoundException("Пользователь не найден!");
+            }
+
             if(item.getName() == null){
                 item.setName(oldItem.getName());
             }
             if(item.getDescription() == null){
                 item.setDescription(oldItem.getDescription());
             }
+            if(item.getAvailable() == null){
+                item.setAvailable(oldItem.getAvailable());
+            }
         }
-
-        log.info(item.toString());
 
         return item;
     }
