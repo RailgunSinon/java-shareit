@@ -31,7 +31,6 @@ import ru.practicum.shareit.user.service.UserService;
  */
 //Пока у нас нет БД, приходится напрямую прокидывать сервис со статикой.
 //Когда подключу базу поменяю на интеграцию сервиса(заработает метод проверки существования).
-
 @RestController
 @RequestMapping("/items")
 @Slf4j
@@ -87,14 +86,12 @@ public class ItemController {
         return convertToDtoListOfItems(items);
     }
 
-
     @GetMapping
     public List<ItemDto> getAllUserItems(@RequestHeader("X-Sharer-User-Id") int userId) {
         log.debug("Получен запрос на получение всех предметов пользователя с id" + userId);
         ArrayList<Item> items = new ArrayList<>(itemService.getUserItems(userId));
         return convertToDtoListOfItems(items);
     }
-
 
     private ItemDto convertToDto(Item item) {
         ItemDto itemDto = modelMapper.map(item, ItemDto.class);
@@ -117,11 +114,9 @@ public class ItemController {
 
         if (itemService.isItemExists(itemId)) {
             oldItem = itemService.getItem(itemId);
-
             if (oldItem.getUserId() != userId) {
                 throw new NotFoundException("Пользователь не найден!");
             }
-
             if (item.getName() == null) {
                 item.setName(oldItem.getName());
             }
