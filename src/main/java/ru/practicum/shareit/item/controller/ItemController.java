@@ -9,13 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +24,6 @@ import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.user.controller.UserController;
 import ru.practicum.shareit.user.service.UserService;
 
 /**
@@ -53,24 +50,24 @@ public class ItemController {
 
     @PostMapping
     public ItemDto addItem(@Valid @RequestBody ItemDto itemDto,
-    @RequestHeader("X-Sharer-User-Id")  int userId){
+        @RequestHeader("X-Sharer-User-Id") int userId) {
         log.debug("Получен запрос на добавление предмета");
-        if(!userService.isUserExists(userId)){
+        if (!userService.isUserExists(userId)) {
             throw new NotFoundException("Пользователь не найден!");
         }
-        Item item = convertToEntity(itemDto,idCounter++,userId);
+        Item item = convertToEntity(itemDto, idCounter++, userId);
         itemService.addItem(item);
         return convertToDto(itemService.getItem(item.getId()));
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestBody ItemDto itemDto,
-        @PathVariable int itemId,@RequestHeader("X-Sharer-User-Id")  int userId){
+        @PathVariable int itemId, @RequestHeader("X-Sharer-User-Id") int userId) {
         log.debug("Получен запрос на обновление предмета c id " + itemId);
-        if(!userService.isUserExists(userId)){
+        if (!userService.isUserExists(userId)) {
             throw new NotFoundException("Пользователь не найден!");
         }
-        Item item = convertToEntity(itemDto,itemId,userId);
+        Item item = convertToEntity(itemDto, itemId, userId);
         itemService.updateItem(item);
         return convertToDto(itemService.getItem(itemId));
     }
@@ -83,55 +80,55 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDto> getItemsByUserSearch(@RequestParam String text,
-        @RequestHeader("X-Sharer-User-Id")  int userId){
+        @RequestHeader("X-Sharer-User-Id") int userId) {
         log.debug("Получен запрос на получение всех предметов пользователя с id" + userId
-        + " и фильтром " + text);
-        ArrayList<Item> items = new ArrayList<>(itemService.getItemsByUserSearch(text,userId));
+            + " и фильтром " + text);
+        ArrayList<Item> items = new ArrayList<>(itemService.getItemsByUserSearch(text, userId));
         return convertToDtoListOfItems(items);
     }
 
 
     @GetMapping
-    public List<ItemDto> getAllUserItems(@RequestHeader("X-Sharer-User-Id")  int userId){
+    public List<ItemDto> getAllUserItems(@RequestHeader("X-Sharer-User-Id") int userId) {
         log.debug("Получен запрос на получение всех предметов пользователя с id" + userId);
         ArrayList<Item> items = new ArrayList<>(itemService.getUserItems(userId));
         return convertToDtoListOfItems(items);
     }
 
 
-    private ItemDto convertToDto(Item item){
-        ItemDto itemDto = modelMapper.map(item,ItemDto.class);
+    private ItemDto convertToDto(Item item) {
+        ItemDto itemDto = modelMapper.map(item, ItemDto.class);
         return itemDto;
     }
 
-    private List<ItemDto> convertToDtoListOfItems(List<Item> items){
+    private List<ItemDto> convertToDtoListOfItems(List<Item> items) {
         ArrayList<ItemDto> itemDtos = new ArrayList<>();
-        for(Item item : items){
+        for (Item item : items) {
             itemDtos.add(convertToDto(item));
         }
         return itemDtos;
     }
 
-    private Item convertToEntity(ItemDto itemDto,int itemId,int userId){
-        Item item = modelMapper.map(itemDto,Item.class);
+    private Item convertToEntity(ItemDto itemDto, int itemId, int userId) {
+        Item item = modelMapper.map(itemDto, Item.class);
         item.setId(itemId);
         item.setUserId(userId);
         Item oldItem;
 
-        if(itemService.isItemExists(itemId)){
+        if (itemService.isItemExists(itemId)) {
             oldItem = itemService.getItem(itemId);
 
-            if (oldItem.getUserId() != userId){
+            if (oldItem.getUserId() != userId) {
                 throw new NotFoundException("Пользователь не найден!");
             }
 
-            if(item.getName() == null){
+            if (item.getName() == null) {
                 item.setName(oldItem.getName());
             }
-            if(item.getDescription() == null){
+            if (item.getDescription() == null) {
                 item.setDescription(oldItem.getDescription());
             }
-            if(item.getAvailable() == null){
+            if (item.getAvailable() == null) {
                 item.setAvailable(oldItem.getAvailable());
             }
         }

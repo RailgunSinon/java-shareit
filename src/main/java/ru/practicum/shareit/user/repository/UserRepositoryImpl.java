@@ -18,7 +18,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void addUser(User user) {
-        if(emailExists(user.getEmail())){
+        if (emailExists(user.getEmail())) {
             throw new AlreadyExistsException("Пользователь с таким email уже существует");
         }
         if (!users.containsKey(user.getId())) {
@@ -31,7 +31,7 @@ public class UserRepositoryImpl implements UserRepository {
         if (!users.containsKey(user.getId())) {
             throw new NotFoundException("Пользователь с таким id не был найден");
         }
-        if(emailExists(user.getEmail(),user)){
+        if (emailExists(user.getEmail(), user)) {
             throw new AlreadyExistsException("Пользователь с таким email уже существует");
         }
         users.put(user.getId(), user);
@@ -60,27 +60,26 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean isUserExists(int userId) {
-        if(users.containsKey(userId))
-        {
+        if (users.containsKey(userId)) {
             return true;
         }
         return false;
     }
 
-    private boolean emailExists(String email){
-        for(User user : users.values()){
-            if(user.getEmail().toLowerCase().equals(email.toLowerCase())){
+    private boolean emailExists(String email) {
+        for (User user : users.values()) {
+            if (user.getEmail().toLowerCase().equals(email.toLowerCase())) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean emailExists(String email,User userForUpdate){
+    private boolean emailExists(String email, User userForUpdate) {
         HashMap<Integer, User> updateUsers = new HashMap<>(users);
         updateUsers.remove(userForUpdate.getId());
-        for(User user : updateUsers.values()){
-            if(user.getEmail().toLowerCase().equals(email.toLowerCase())){
+        for (User user : updateUsers.values()) {
+            if (user.getEmail().toLowerCase().equals(email.toLowerCase())) {
                 return true;
             }
         }

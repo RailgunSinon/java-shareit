@@ -122,12 +122,12 @@ public class UserController {
         user.setId(userId);
         User oldUser;
 
-        if(userService.isUserExists(userId)){
+        if (userService.isUserExists(userId)) {
             oldUser = userService.getUserById(userId);
-            if(user.getEmail() == null){
+            if (user.getEmail() == null) {
                 user.setEmail(oldUser.getEmail());
             }
-            if(user.getName() == null){
+            if (user.getName() == null) {
                 user.setName(oldUser.getName());
             }
 

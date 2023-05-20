@@ -33,7 +33,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> getItemsByUserSearch(String text, int userId) {
-        if (text.isBlank()){
+        if (text.isBlank()) {
             return new ArrayList<>();
         }
         return items.values().stream()
@@ -53,7 +53,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public boolean isItemExists(int itemId) {
-        if(items.containsKey(itemId)){
+        if (items.containsKey(itemId)) {
             return true;
         }
         return false;
