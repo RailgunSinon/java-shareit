@@ -26,11 +26,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.service.UserService;
 
-/**
- * TODO Sprint add-controllers.
- */
 //Пока у нас нет БД, приходится напрямую прокидывать сервис со статикой.
-//Когда подключу базу поменяю на интеграцию сервиса(заработает метод проверки существования).
 @RestController
 @RequestMapping("/items")
 @Slf4j
