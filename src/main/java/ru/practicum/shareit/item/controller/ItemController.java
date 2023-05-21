@@ -27,7 +27,7 @@ import ru.practicum.shareit.item.service.ItemService;
 public class ItemController {
 
     private final ItemService itemService;
-    private final ItemControllerMapper mapper;
+    private final ItemMapper mapper;
 
     @PostMapping
     public ItemDto addItem(@Valid @RequestBody ItemDto itemDto,

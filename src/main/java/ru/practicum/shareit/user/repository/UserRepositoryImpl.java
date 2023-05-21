@@ -8,13 +8,11 @@ import ru.practicum.shareit.exceptions.AlreadyExistsException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.model.User;
 
-//Пока нет БД приходится делать статику под тесты. Иначе не проверить наличие пользователя из
-//контроллера предметов
 
 @Component
 public class UserRepositoryImpl implements UserRepository {
 
-    private static final HashMap<Integer, User> users = new HashMap<>();
+    private final HashMap<Integer, User> users = new HashMap<>();
     private static int idCounter = 1;
 
     @Override

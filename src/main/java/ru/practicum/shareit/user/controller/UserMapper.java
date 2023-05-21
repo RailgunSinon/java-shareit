@@ -7,7 +7,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 @Component
-public class UserControllerMapper {
+public class UserMapper {
 
     private final ModelMapper modelMapper = new ModelMapper();
 

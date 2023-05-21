@@ -10,7 +10,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
 @Component
-public class ItemControllerMapper {
+public class ItemMapper {
 
     private final ModelMapper modelMapper = new ModelMapper();
 

@@ -27,7 +27,7 @@ import ru.practicum.shareit.user.service.UserService;
 public class UserController {
 
     private final UserService userService;
-    private final UserControllerMapper mapper;
+    private final UserMapper mapper;
 
     @PostMapping
     public UserDto addUser(@Valid @RequestBody UserDto userDto) {
