@@ -2,25 +2,17 @@ package ru.practicum.shareit.user.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.validation.Valid;
-import javax.validation.ValidationException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.shareit.exceptions.AlreadyExistsException;
-import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
@@ -31,33 +23,27 @@ import ru.practicum.shareit.user.service.UserService;
 @Slf4j
 @RestController
 @RequestMapping(path = "/users")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-    private final ModelMapper modelMapper = new ModelMapper();
-    private static int idCounter = 1;
-
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserControllerMapper mapper;
 
     @PostMapping
     public UserDto addUser(@Valid @RequestBody UserDto userDto) {
         log.debug("Получен запрос на добавление пользователя");
-        User user = convertToEntity(userDto, idCounter);
+        User user = mapper.convertToEntity(userService, userDto, 0);
         userService.addUser(user);
-        idCounter++;
-        return convertToDto(userService.getUserById(user.getId()));
+        return mapper.convertToDto(userService.getUserById(user.getId()));
     }
 
     @PatchMapping("/{userId}")
     public UserDto updateUser(@RequestBody UserDto userDto,
         @PathVariable int userId) {
         log.debug("Получен запрос на обновление пользователя");
-        User user = convertToEntity(userDto, userId);
+        User user = mapper.convertToEntity(userService, userDto, userId);
         userService.updateUser(user);
-        return convertToDto(userService.getUserById(user.getId()));
+        return mapper.convertToDto(userService.getUserById(user.getId()));
     }
 
     @GetMapping
@@ -66,7 +52,7 @@ public class UserController {
         ArrayList<User> users = new ArrayList<>(userService.getAllUsers());
         ArrayList<UserDto> userDtos = new ArrayList<>();
         for (User user : users) {
-            userDtos.add(convertToDto(user));
+            userDtos.add(mapper.convertToDto(user));
         }
         return userDtos;
     }
@@ -74,64 +60,12 @@ public class UserController {
     @GetMapping("/{userId}")
     public UserDto getUserById(@PathVariable int userId) {
         log.debug("Получен запрос на получение пользователя по id");
-        return convertToDto(userService.getUserById(userId));
+        return mapper.convertToDto(userService.getUserById(userId));
     }
 
     @DeleteMapping("/{userId}")
     public void deleteUserById(@PathVariable int userId) {
         log.debug("Получен запрос на удаление пользователя по id");
         userService.deleteUserById(userId);
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleValidationException(final ValidationException exception) {
-        log.error("Не пройдена валидация для создания пользователя");
-        return Map.of("Ошибка валидации", exception.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleNotFoundException(final NotFoundException exception) {
-        log.error("Пользователь не обнаружен");
-        return Map.of("Пользователь не найден", exception.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handleRunTimeException(final RuntimeException exception) {
-        log.error("Неизвестная ошибка");
-        return Map.of("Что-то пошло не так", exception.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String, String> handleAlreadyExistsException(
-        final AlreadyExistsException exception) {
-        log.error("Пользователь уже сущетсвует!");
-        return Map.of("Пользователь уже сущетсвует!", exception.getMessage());
-    }
-
-    private UserDto convertToDto(User user) {
-        UserDto userDto = modelMapper.map(user, UserDto.class);
-        return userDto;
-    }
-
-    private User convertToEntity(UserDto userDto, int userId) {
-        User user = modelMapper.map(userDto, User.class);
-        user.setId(userId);
-        User oldUser;
-
-        if (userService.isUserExists(userId)) {
-            oldUser = userService.getUserById(userId);
-            if (user.getEmail() == null) {
-                user.setEmail(oldUser.getEmail());
-            }
-            if (user.getName() == null) {
-                user.setName(oldUser.getName());
-            }
-
-        }
-        return user;
     }
 }

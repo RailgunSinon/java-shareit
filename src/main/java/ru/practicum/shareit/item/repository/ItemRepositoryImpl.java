@@ -12,9 +12,12 @@ import ru.practicum.shareit.item.model.Item;
 public class ItemRepositoryImpl implements ItemRepository {
 
     private final HashMap<Integer, Item> items = new HashMap<>();
+    private static int idCounter = 1;
 
     @Override
     public void addItem(Item item) {
+        item.setId(idCounter);
+        idCounter++;
         items.put(item.getId(), item);
     }
 

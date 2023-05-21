@@ -15,6 +15,7 @@ import ru.practicum.shareit.user.model.User;
 public class UserRepositoryImpl implements UserRepository {
 
     private static final HashMap<Integer, User> users = new HashMap<>();
+    private static int idCounter = 1;
 
     @Override
     public void addUser(User user) {
@@ -22,6 +23,7 @@ public class UserRepositoryImpl implements UserRepository {
             throw new AlreadyExistsException("Пользователь с таким email уже существует");
         }
         if (!users.containsKey(user.getId())) {
+            user.setId(idCounter++);
             users.put(user.getId(), user);
         }
     }

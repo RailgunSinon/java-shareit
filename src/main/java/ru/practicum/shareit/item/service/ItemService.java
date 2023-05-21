@@ -16,4 +16,6 @@ public interface ItemService {
     List<Item> getUserItems(int userId);
 
     boolean isItemExists(int itemId);
+
+    void isUserExistsOrException(int userId);
 }
