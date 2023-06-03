@@ -24,9 +24,9 @@ public interface ItemService {
 
     void isUserExistsOrException(long userId);
 
-    boolean isUserAnItemOwner(long userId,Item item);
+    boolean isUserAnItemOwner(long userId, Item item);
 
-    boolean isUserAnItemsOwner(long userId,List<Item> items);
+    boolean isUserAnItemsOwner(long userId, List<Item> items);
 
     void addCommentToItem(Comment comment);
 

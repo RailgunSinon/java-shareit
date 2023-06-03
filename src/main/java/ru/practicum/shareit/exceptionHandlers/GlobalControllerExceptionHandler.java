@@ -3,14 +3,12 @@ package ru.practicum.shareit.exceptionHandlers;
 import java.util.Map;
 import javax.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.spi.ErrorMessage;
-import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.shareit.exceptionHandlers.Entity.ErrorResponse;
 import ru.practicum.shareit.exceptions.AlreadyExistsException;
-import ru.practicum.shareit.exceptions.ErrorResponse;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.exceptions.StateNotSupportedException;
 
@@ -57,7 +55,7 @@ public class GlobalControllerExceptionHandler {
     public ErrorResponse handleStateNotSupportedException(
         final StateNotSupportedException exception) {
         log.error("Ошибка получения состояния бронирования");
-        return new ErrorResponse(400,"Bad Request",exception.getMessage());
+        return new ErrorResponse(400, "Bad Request", exception.getMessage());
     }
 
 }

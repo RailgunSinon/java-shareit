@@ -27,6 +27,7 @@ import ru.practicum.shareit.user.model.User;
 @NoArgsConstructor
 @Table(name = "bookings")
 public class Booking {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingDtoShort {
+
     @PositiveOrZero
     private long id;
     @PositiveOrZero

@@ -9,7 +9,6 @@ import ru.practicum.shareit.booking.controller.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exceptions.NotFoundException;
-import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
@@ -32,7 +31,7 @@ public class ItemMapper {
         Booking nextBooking = bookingService.getItemNextBooking(item.getId());
         itemDto.setLastBooking(bookingMapper.convertToShort(lastBooking));
         itemDto.setNextBooking(bookingMapper.convertToShort(nextBooking));
-        List <Comment> comments = commentRepository.findAllByItemId(item.getId());
+        List<Comment> comments = commentRepository.findAllByItemId(item.getId());
         itemDto.setComments(commentMapper.convertToDtoListOfComments(comments));
         return itemDto;
     }
@@ -41,7 +40,7 @@ public class ItemMapper {
         ItemDto itemDto = modelMapper.map(item, ItemDto.class);
         itemDto.setLastBooking(null);
         itemDto.setNextBooking(null);
-        List <Comment> comments = commentRepository.findAllByItemId(item.getId());
+        List<Comment> comments = commentRepository.findAllByItemId(item.getId());
         itemDto.setComments(commentMapper.convertToDtoListOfComments(comments));
         return itemDto;
     }
@@ -49,7 +48,7 @@ public class ItemMapper {
     public List<ItemDto> convertToDtoListOfItems(List<Item> items, boolean isOwner) {
         ArrayList<ItemDto> itemDtos = new ArrayList<>();
         for (Item item : items) {
-            if(isOwner){
+            if (isOwner) {
                 itemDtos.add(convertToDtoForOwner(item));
             } else {
                 itemDtos.add(convertToDtoForUser(item));
@@ -58,7 +57,8 @@ public class ItemMapper {
         return itemDtos;
     }
 
-    public Item convertToEntity(ItemService itemService, ItemDto itemDto, Long itemId, Long userId) {
+    public Item convertToEntity(ItemService itemService, ItemDto itemDto, Long itemId,
+        Long userId) {
         Item item = modelMapper.map(itemDto, Item.class);
         if (itemId != 0) {
             item.setId(itemId);

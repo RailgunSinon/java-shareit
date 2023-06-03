@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking.model.enums;
 
-import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.exceptions.StateNotSupportedException;
 
 public enum State {

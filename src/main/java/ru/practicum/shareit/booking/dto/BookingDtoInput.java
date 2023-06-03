@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingDtoInput {
+
     @PositiveOrZero
     private long id;
     @PositiveOrZero

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoInput;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.model.enums.State;
 import ru.practicum.shareit.booking.service.BookingService;
 
 /**

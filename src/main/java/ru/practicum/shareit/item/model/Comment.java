@@ -21,6 +21,7 @@ import ru.practicum.shareit.user.model.User;
 @Entity
 @Table(name = "comments")
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

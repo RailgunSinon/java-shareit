@@ -12,15 +12,16 @@ import ru.practicum.shareit.booking.model.Booking;
 
 @Component
 public class BookingMapper {
+
     private final ModelMapper modelMapper = new ModelMapper();
 
-    public BookingDto convertToDto(Booking booking){
-        BookingDto bookingDto = modelMapper.map(booking,BookingDto.class);
+    public BookingDto convertToDto(Booking booking) {
+        BookingDto bookingDto = modelMapper.map(booking, BookingDto.class);
         return bookingDto;
     }
 
-    public BookingDtoShort convertToShort(Booking booking){
-        if(booking == null){
+    public BookingDtoShort convertToShort(Booking booking) {
+        if (booking == null) {
             return null;
         }
         BookingDtoShort bookingDtoShort = new BookingDtoShort();
@@ -29,22 +30,22 @@ public class BookingMapper {
         return bookingDtoShort;
     }
 
-    public List<BookingDto> convertToDtoListOfBooking(List<Booking> bookings){
+    public List<BookingDto> convertToDtoListOfBooking(List<Booking> bookings) {
         List<BookingDto> bookingDtos = new ArrayList<>();
-        for (Booking booking : bookings){
+        for (Booking booking : bookings) {
             bookingDtos.add(convertToDto(booking));
         }
         return bookingDtos;
     }
 
-    public Booking convertToEntity(BookingDtoInput bookingDtoInput){
+    public Booking convertToEntity(BookingDtoInput bookingDtoInput) {
         validateDate(bookingDtoInput);
-        Booking booking = modelMapper.map(bookingDtoInput,Booking.class);
+        Booking booking = modelMapper.map(bookingDtoInput, Booking.class);
         return booking;
     }
 
-    private void validateDate(BookingDtoInput bookingDtoInput){
-        if(!bookingDtoInput.getStart().isBefore(bookingDtoInput.getEnd())){
+    private void validateDate(BookingDtoInput bookingDtoInput) {
+        if (!bookingDtoInput.getStart().isBefore(bookingDtoInput.getEnd())) {
             throw new ValidationException("Время начала брони должно быть раньше времени конца!");
         }
     }

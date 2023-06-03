@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
         try {
             getUserById(userId);
             return true;
-        } catch (NotFoundException e){
+        } catch (NotFoundException e) {
             return false;
         }
     }

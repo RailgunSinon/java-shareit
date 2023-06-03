@@ -62,7 +62,7 @@ public class ItemController {
         @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.debug("Получен запрос на получение предмета c id " + itemId);
         Item item = itemService.getItem(itemId);
-        if (itemService.isUserAnItemOwner(userId,item)){
+        if (itemService.isUserAnItemOwner(userId, item)) {
             return itemMapper.convertToDtoForOwner(item);
         } else {
             return itemMapper.convertToDtoForUser(item);
@@ -76,21 +76,23 @@ public class ItemController {
             + " и фильтром " + text);
         ArrayList<Item> items = new ArrayList<>(
             itemService.getItemsByNameOrDescriptionSearch(text));
-        return itemMapper.convertToDtoListOfItems(items,itemService.isUserAnItemsOwner(userId,items));
+        return itemMapper
+            .convertToDtoListOfItems(items, itemService.isUserAnItemsOwner(userId, items));
     }
 
     @GetMapping
     public List<ItemDto> getAllUserItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
         log.debug("Получен запрос на получение всех предметов пользователя с id" + userId);
         ArrayList<Item> items = new ArrayList<>(itemService.getUserItems(userId));
-        return itemMapper.convertToDtoListOfItems(items,itemService.isUserAnItemsOwner(userId,items));
+        return itemMapper
+            .convertToDtoListOfItems(items, itemService.isUserAnItemsOwner(userId, items));
     }
 
     @PostMapping("/{itemId}/comment")
     public CommentDto addComment(@Valid @RequestBody CommentDto commentDto,
-        @RequestHeader("X-Sharer-User-Id") Long userId,@PathVariable Long itemId){
+        @RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId) {
         log.debug("Получен запрос на добавление комментария от пользователя " + userId);
-        Comment comment = commentMapper.convertToEntity(commentDto,userId,itemId);
+        Comment comment = commentMapper.convertToEntity(commentDto, userId, itemId);
         itemService.addCommentToItem(comment);
         return commentMapper.convertToDto(itemService.getCommentById(comment.getId()));
     }
