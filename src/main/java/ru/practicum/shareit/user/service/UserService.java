@@ -11,9 +11,9 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    User getUserById(int userId);
+    User getUserById(long userId);
 
-    void deleteUserById(int userId);
+    void deleteUserById(long userId);
 
-    boolean isUserExists(int userId);
+    boolean isUserExists(long userId);
 }

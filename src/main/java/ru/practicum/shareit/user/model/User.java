@@ -1,5 +1,11 @@
 package ru.practicum.shareit.user.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
@@ -14,12 +20,18 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @PositiveOrZero
-    int id;
+    private long id;
     @NotBlank
-    String name;
+    @Column(nullable = false)
+    private String name;
     @Email
     @NotBlank
-    String email;
+    @Column(nullable = false, length = 512, unique = true)
+    private String email;
 }

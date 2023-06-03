@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.service;
 
 import java.util.List;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 
 public interface ItemService {
@@ -9,13 +10,25 @@ public interface ItemService {
 
     void updateItem(Item item);
 
-    Item getItem(int itemId);
+    Item getItem(long itemId);
 
-    List<Item> getItemsByUserSearch(String text, int userId);
+    void deleteItemById(long itemId);
 
-    List<Item> getUserItems(int userId);
+    List<Item> getItemsByNameOrDescriptionSearch(String text);
 
-    boolean isItemExists(int itemId);
+    List<Item> getUserItems(long userId);
 
-    void isUserExistsOrException(int userId);
+    boolean isItemExists(long itemId);
+
+    boolean isItemAvailable(long itemId);
+
+    void isUserExistsOrException(long userId);
+
+    boolean isUserAnItemOwner(long userId,Item item);
+
+    boolean isUserAnItemsOwner(long userId,List<Item> items);
+
+    void addCommentToItem(Comment comment);
+
+    Comment getCommentById(long commentId);
 }

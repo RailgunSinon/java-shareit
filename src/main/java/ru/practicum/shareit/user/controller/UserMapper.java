@@ -16,7 +16,7 @@ public class UserMapper {
         return userDto;
     }
 
-    public User convertToEntity(UserService userService, UserDto userDto, int userId) {
+    public User convertToEntity(UserService userService, UserDto userDto, Long userId) {
         User user = modelMapper.map(userDto, User.class);
         if (userId != 0) {
             user.setId(userId);

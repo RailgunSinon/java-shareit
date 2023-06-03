@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 public class UserDto {
 
     @PositiveOrZero
-    int id;
+    private long id;
     @NotBlank
-    String name;
+    private String name;
     @Email
     @NotBlank
-    String email;
+    private String email;
 }

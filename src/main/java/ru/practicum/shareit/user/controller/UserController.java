@@ -32,14 +32,14 @@ public class UserController {
     @PostMapping
     public UserDto addUser(@Valid @RequestBody UserDto userDto) {
         log.debug("Получен запрос на добавление пользователя");
-        User user = mapper.convertToEntity(userService, userDto, 0);
+        User user = mapper.convertToEntity(userService, userDto, 0L);
         userService.addUser(user);
         return mapper.convertToDto(userService.getUserById(user.getId()));
     }
 
     @PatchMapping("/{userId}")
     public UserDto updateUser(@RequestBody UserDto userDto,
-        @PathVariable int userId) {
+        @PathVariable Long userId) {
         log.debug("Получен запрос на обновление пользователя");
         User user = mapper.convertToEntity(userService, userDto, userId);
         userService.updateUser(user);
@@ -58,13 +58,13 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public UserDto getUserById(@PathVariable int userId) {
+    public UserDto getUserById(@PathVariable Long userId) {
         log.debug("Получен запрос на получение пользователя по id");
         return mapper.convertToDto(userService.getUserById(userId));
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUserById(@PathVariable int userId) {
+    public void deleteUserById(@PathVariable Long userId) {
         log.debug("Получен запрос на удаление пользователя по id");
         userService.deleteUserById(userId);
     }
