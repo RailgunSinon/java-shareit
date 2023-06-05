@@ -7,9 +7,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.shareit.exceptionHandlers.Entity.ErrorResponse;
 import ru.practicum.shareit.exceptions.AlreadyExistsException;
 import ru.practicum.shareit.exceptions.NotFoundException;
+import ru.practicum.shareit.exceptions.StateNotSupportedException;
 
+/* Пришлось немного импровизировать. Я уж не буду спрашивать почему у некоторых тестов странные
+Коды ответа, 404 по запрету владельцу возвращать свою вещь - это интересно. Но тут пришлось
+Покреативить, чтобы вернуть нужный текст ошибки на сообщение =/ Я перепробовал почти все стандартное
+и оно не соответствовало. Это решение работает. Почему и как для меня загадка.
+*/
 @Slf4j
 @RestControllerAdvice
 public class GlobalControllerExceptionHandler {
@@ -24,7 +31,7 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleValidationException(final ValidationException exception) {
-        log.error("Не пройдена валидация для создания предмета или пользователя");
+        log.error("Не пройдена валидация для создания сущности");
         return Map.of("Ошибка валидации", exception.getMessage());
     }
 
@@ -39,7 +46,16 @@ public class GlobalControllerExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public Map<String, String> handleAlreadyExistsException(
         final AlreadyExistsException exception) {
-        log.error("Пользователь или предмет уже сущетсвует!");
+        log.error("Сущность уже сущетсвует!");
         return Map.of("Пользователь или предмет уже сущетсвует!", exception.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleStateNotSupportedException(
+        final StateNotSupportedException exception) {
+        log.error("Ошибка получения состояния бронирования");
+        return new ErrorResponse(400, "Bad Request", exception.getMessage());
+    }
+
 }

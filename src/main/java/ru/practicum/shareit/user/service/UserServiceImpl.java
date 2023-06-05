@@ -1,56 +1,72 @@
 package ru.practicum.shareit.user.service;
 
 import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Override
+    @Transactional
     public void addUser(User user) {
         log.info("Создание нового пользователя");
-        userRepository.addUser(user);
+        userRepository.save(user);
     }
 
     @Override
+    @Transactional
     public void updateUser(User user) {
         log.info("Изменение пользователя с id " + user.getId());
-        userRepository.updateUser(user);
+        userRepository.save(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> getAllUsers() {
         log.info("Получение всех пользователей");
-        return userRepository.getAllUsers();
+        return userRepository.findAll();
     }
 
     @Override
-    public User getUserById(int userId) {
+    @Transactional(readOnly = true)
+    public User getUserById(long userId) {
         log.info("Получение пользователя с id " + userId);
-        return userRepository.getUserById(userId);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("Пользователь не был найден");
+        }
+        return optionalUser.get();
     }
 
     @Override
-    public void deleteUserById(int userId) {
+    @Transactional
+    public void deleteUserById(long userId) {
         log.info("Удаление пользователя с id " + userId);
-        userRepository.deleteUserById(userId);
+        userRepository.deleteById(userId);
     }
 
     @Override
-    public boolean isUserExists(int userId) {
+    @Transactional(readOnly = true)
+    public boolean isUserExists(long userId) {
         log.info("Запрос существования пользователя с id " + userId);
-        return userRepository.isUserExists(userId);
+        try {
+            getUserById(userId);
+            return true;
+        } catch (NotFoundException e) {
+            return false;
+        }
     }
+
+
 }
