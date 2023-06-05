@@ -7,9 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.enums.Status;
 
-//тут по идее можно было с состояниями прописать без query, но получается километровое классическое
-//spring название метода, что неудобно и не влезает в норму кол-ва символов в строке.
-
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findAllByBookerIdOrderByBookingStartDesc(long bookerId);
@@ -30,8 +27,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query(value = "select b from Booking b where b.item.userId = ?1 order by b.bookingStart desc ")
     List<Booking> findAllByOwnerId(long ownerId);
 
-    @Query(value = "select b from Booking b where b.item.userId = ?1 and b.bookingStart < ?2"
-        + " and b.bookingEnd > ?2 order by b.bookingStart desc ")
+    @Query(value = "select b from Booking b where b.item.userId = ?1 and b.bookingStart <= ?2"
+        + " and b.bookingEnd >= ?2 order by b.bookingStart desc ")
     List<Booking> findAllByOwnerIdAndStartAfterAndEndBefore(long ownerId,
         LocalDateTime localDateTime);
 

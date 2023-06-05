@@ -7,7 +7,7 @@ import javax.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.booking.dto.BookingDtoShort;
+import ru.practicum.shareit.booking.dto.BookingOwnerDto;
 
 /**
  * TODO Sprint add-controllers.
@@ -26,7 +26,7 @@ public class ItemDto {
     private String description;
     @NotNull
     private Boolean available;
-    private BookingDtoShort lastBooking;
-    private BookingDtoShort nextBooking;
+    private BookingOwnerDto lastBooking;
+    private BookingOwnerDto nextBooking;
     private List<CommentDto> comments;
 }

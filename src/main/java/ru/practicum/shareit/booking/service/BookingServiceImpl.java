@@ -69,7 +69,7 @@ public class BookingServiceImpl implements BookingService {
         log.info("Получение объекта бронирования с id " + bookingId);
         Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
         if (bookingOptional.isEmpty()) {
-            throw new NotFoundException("Бронь не найдена!");
+            throw new NotFoundException("Бронь c Id " + bookingId + " не найдена!");
         }
         return bookingOptional.get();
     }
@@ -145,7 +145,7 @@ public class BookingServiceImpl implements BookingService {
             case REJECTED:
                 return bookingRepository.findAllByOwnerIdAndState(userId, Status.REJECTED);
             default:
-                throw new RuntimeException("Unknown state: UNSUPPORTED_STATUS");
+                throw new RuntimeException("Unknown state: " + state);
         }
     }
 

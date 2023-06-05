@@ -6,8 +6,8 @@ import javax.validation.ValidationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingDtoInput;
-import ru.practicum.shareit.booking.dto.BookingDtoShort;
+import ru.practicum.shareit.booking.dto.BookingRequestDto;
+import ru.practicum.shareit.booking.dto.BookingOwnerDto;
 import ru.practicum.shareit.booking.model.Booking;
 
 @Component
@@ -20,14 +20,14 @@ public class BookingMapper {
         return bookingDto;
     }
 
-    public BookingDtoShort convertToShort(Booking booking) {
+    public BookingOwnerDto convertToShort(Booking booking) {
         if (booking == null) {
             return null;
         }
-        BookingDtoShort bookingDtoShort = new BookingDtoShort();
-        bookingDtoShort.setId(booking.getId());
-        bookingDtoShort.setBookerId(booking.getBooker().getId());
-        return bookingDtoShort;
+        BookingOwnerDto bookingOwnerDto = new BookingOwnerDto();
+        bookingOwnerDto.setId(booking.getId());
+        bookingOwnerDto.setBookerId(booking.getBooker().getId());
+        return bookingOwnerDto;
     }
 
     public List<BookingDto> convertToDtoListOfBooking(List<Booking> bookings) {
@@ -38,14 +38,14 @@ public class BookingMapper {
         return bookingDtos;
     }
 
-    public Booking convertToEntity(BookingDtoInput bookingDtoInput) {
-        validateDate(bookingDtoInput);
-        Booking booking = modelMapper.map(bookingDtoInput, Booking.class);
+    public Booking convertToEntity(BookingRequestDto bookingRequestDto) {
+        validateDate(bookingRequestDto);
+        Booking booking = modelMapper.map(bookingRequestDto, Booking.class);
         return booking;
     }
 
-    private void validateDate(BookingDtoInput bookingDtoInput) {
-        if (!bookingDtoInput.getStart().isBefore(bookingDtoInput.getEnd())) {
+    private void validateDate(BookingRequestDto bookingRequestDto) {
+        if (!bookingRequestDto.getStart().isBefore(bookingRequestDto.getEnd())) {
             throw new ValidationException("Время начала брони должно быть раньше времени конца!");
         }
     }

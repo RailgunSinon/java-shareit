@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingDtoInput;
+import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
 
@@ -31,11 +31,11 @@ public class BookingController {
     private final BookingMapper mapper;
 
     @PostMapping
-    public BookingDto addBooking(@Valid @RequestBody BookingDtoInput bookingDtoInput,
+    public BookingDto addBooking(@Valid @RequestBody BookingRequestDto bookingRequestDto,
         @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.debug("Получен запрос на добавление брони предмета");
-        Booking booking = mapper.convertToEntity(bookingDtoInput);
-        bookingService.addBooking(booking, userId, bookingDtoInput.getItemId());
+        Booking booking = mapper.convertToEntity(bookingRequestDto);
+        bookingService.addBooking(booking, userId, bookingRequestDto.getItemId());
         return mapper.convertToDto(bookingService.getBookingById(booking.getId()));
     }
 
@@ -55,28 +55,20 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<BookingDto> getCurrentBookingForUser(@RequestParam(required = false) String state,
+    public List<BookingDto> getCurrentBookingForUser(
+        @RequestParam(required = false, defaultValue = "ALL") String state,
         @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.debug("Получен запрос на получение информации о брони предметов пользователя");
-        if (state == null) {
-            return mapper.convertToDtoListOfBooking(
-                bookingService.getAllBookingOfUserWithState(userId, "ALL"));
-        } else {
-            return mapper.convertToDtoListOfBooking(
-                bookingService.getAllBookingOfUserWithState(userId, state));
-        }
+        return mapper.convertToDtoListOfBooking(
+            bookingService.getAllBookingOfUserWithState(userId, state));
     }
 
     @GetMapping("/owner")
-    public List<BookingDto> getCurrentBookingForOwner(@RequestParam(required = false) String state,
+    public List<BookingDto> getCurrentBookingForOwner(
+        @RequestParam(required = false, defaultValue = "ALL") String state,
         @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.debug("Получен запрос на получение информации о брони предметов владельца");
-        if (state == null) {
-            return mapper.convertToDtoListOfBooking(
-                bookingService.getAllBookingForItemsOfOwnerWithState(userId, "ALL"));
-        } else {
-            return mapper.convertToDtoListOfBooking(
-                bookingService.getAllBookingForItemsOfOwnerWithState(userId, state));
-        }
+        return mapper.convertToDtoListOfBooking(
+            bookingService.getAllBookingForItemsOfOwnerWithState(userId, state));
     }
 }
