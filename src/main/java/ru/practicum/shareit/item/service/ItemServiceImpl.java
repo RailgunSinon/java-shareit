@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
@@ -28,6 +29,7 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final BookingRepository bookingRepository;
+    private static final int ITEM_LIST_PAGE_SIZE = 10;
 
     @Override
     @Transactional
@@ -63,18 +65,20 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Item> getItemsByNameOrDescriptionSearch(String text) {
+    public List<Item> getItemsByNameOrDescriptionSearch(String text, int from, int size) {
         log.info("Получение списка всех предметов пользователя с фильтром " + text);
         if (text.isBlank()) {
             return new ArrayList<>();
         }
-        return itemRepository.findByNameOrDescriptionLike(text.toLowerCase());
+        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+        return itemRepository.findByNameOrDescriptionLike(text.toLowerCase(),page);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Item> getUserItems(long userId) {
+    public List<Item> getUserItems(long userId, int from, int size) {
         log.info("Получение списка всех предметов пользователя с id " + userId);
+        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
         return itemRepository.findAllByUserIdOrderById(userId);
     }
 
@@ -127,6 +131,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public List<Item> getItemsByRequestId(long requestId) {
+        log.info("Получение предметов по запросу с id " + requestId);
+        PageRequest page = PageRequest.of(0, ITEM_LIST_PAGE_SIZE);
+        return itemRepository.findAllByRequestIdOrderById(requestId,page);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public void isUserExistsOrException(long userId) {
         if (!userService.isUserExists(userId)) {
@@ -135,7 +146,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public boolean isUserWasAnItemBooker(long userId, long itemId) {
-        List<Booking> bookings = bookingRepository.findAllByBookerIdOrderByBookingStartDesc(userId);
+        PageRequest page = PageRequest.of(0, ITEM_LIST_PAGE_SIZE);
+        List<Booking> bookings = bookingRepository
+            .findAllByBookerIdOrderByBookingStartDesc(userId, page);
         if (bookings.size() == 0 || bookings.isEmpty()) {
             return false;
         }

@@ -29,4 +29,7 @@ public class ItemDto {
     private BookingOwnerDto lastBooking;
     private BookingOwnerDto nextBooking;
     private List<CommentDto> comments;
+    @PositiveOrZero
+    private Long requestId;
+
 }

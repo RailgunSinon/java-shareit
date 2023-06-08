@@ -33,6 +33,10 @@ public class ItemMapper {
         itemDto.setNextBooking(bookingMapper.convertToShort(nextBooking));
         List<Comment> comments = commentRepository.findAllByItemId(item.getId());
         itemDto.setComments(commentMapper.convertToDtoListOfComments(comments));
+        if(item.getRequest() != null){
+            itemDto.setRequestId(item.getRequest().getId());
+        }
+
         return itemDto;
     }
 
@@ -42,6 +46,9 @@ public class ItemMapper {
         itemDto.setNextBooking(null);
         List<Comment> comments = commentRepository.findAllByItemId(item.getId());
         itemDto.setComments(commentMapper.convertToDtoListOfComments(comments));
+        if(item.getRequest() != null){
+            itemDto.setRequestId(item.getRequest().getId());
+        }
         return itemDto;
     }
 
