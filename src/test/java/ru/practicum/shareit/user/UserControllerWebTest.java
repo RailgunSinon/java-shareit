@@ -145,8 +145,8 @@ public class UserControllerWebTest {
     @Test
     void getAllUsersShouldReturnOk() throws Exception {
 
-        Mockito.when(userService.getAllUsers()).thenReturn(List.of(userTestMap.get(1L)
-            , userTestMap.get(2L), userTestMap.get(3L)));
+        Mockito.when(userService.getAllUsers()).thenReturn(List.of(userTestMap.get(1L),
+            userTestMap.get(2L), userTestMap.get(3L)));
 
         mvc.perform(get("/users"))
             .andExpect(status().isOk())

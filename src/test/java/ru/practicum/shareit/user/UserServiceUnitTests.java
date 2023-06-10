@@ -18,6 +18,7 @@ import ru.practicum.shareit.user.service.UserServiceImpl;
 @SpringBootTest
 
 public class UserServiceUnitTests {
+
     UserService userService;
 
     private UserRepository mockUserRepository;
@@ -29,7 +30,7 @@ public class UserServiceUnitTests {
     );
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         mockUserRepository = Mockito.mock(UserRepository.class);
         userService = new UserServiceImpl(mockUserRepository);
 
@@ -79,18 +80,18 @@ public class UserServiceUnitTests {
     }
 
     @Test
-    void getUserByIdShouldReturnUser(){
+    void getUserByIdShouldReturnUser() {
         User user = userService.getUserById(1L);
-        Assertions.assertEquals(userTestMap.get(1L).getId(),user.getId());
-        Assertions.assertEquals(userTestMap.get(1L).getName(),user.getName());
-        Assertions.assertEquals(userTestMap.get(1L).getEmail(),user.getEmail());
+        Assertions.assertEquals(userTestMap.get(1L).getId(), user.getId());
+        Assertions.assertEquals(userTestMap.get(1L).getName(), user.getName());
+        Assertions.assertEquals(userTestMap.get(1L).getEmail(), user.getEmail());
         Mockito.verify(mockUserRepository, Mockito.times(1))
             .findById(userTestMap.get(1L).getId());
     }
 
     @Test
-    void getAllUsersShouldReturnListOfUsers(){
+    void getAllUsersShouldReturnListOfUsers() {
         List<User> users = userService.getAllUsers();
-        Assertions.assertEquals(3,users.size());
+        Assertions.assertEquals(3, users.size());
     }
 }

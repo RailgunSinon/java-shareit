@@ -183,8 +183,8 @@ public class BookingServiceUnitTests {
     void getBookingByIdShouldCallRepositoryFindMethod() {
         bookingService.getBookingById(bookingTestMap.get(1L).getId(),
             bookingTestMap.get(1L).getBooker().getId());
-        Mockito.verify(mockBookingRepository, Mockito.times(1)).
-            findById(bookingTestMap.get(1L).getId());
+        Mockito.verify(mockBookingRepository, Mockito.times(1))
+            .findById(bookingTestMap.get(1L).getId());
     }
 
     @Test

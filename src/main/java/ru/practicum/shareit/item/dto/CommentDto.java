@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommentDto {
+
     @PositiveOrZero
     private long id;
     @NotBlank(message = "Комментарий не должен быть пустым.")

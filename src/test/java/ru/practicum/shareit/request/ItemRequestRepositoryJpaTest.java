@@ -20,6 +20,7 @@ import ru.practicum.shareit.user.model.User;
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ItemRequestRepositoryJpaTest {
+
     @Autowired
     private TestEntityManager em;
     @Autowired
@@ -48,22 +49,22 @@ public class ItemRequestRepositoryJpaTest {
     );
 
     private final Map<Long, ItemRequest> itemRequestTestMap = Map.of(
-        1L,new ItemRequest(1,"Хочу дрель",userTestMap.get(1L),created),
-        2L,new ItemRequest(2,"Хочу дрель",userTestMap.get(2L),created),
-        3L,new ItemRequest(3,"Хочу молоток",userTestMap.get(1L),created)
+        1L, new ItemRequest(1, "Хочу дрель", userTestMap.get(1L), created),
+        2L, new ItemRequest(2, "Хочу дрель", userTestMap.get(2L), created),
+        3L, new ItemRequest(3, "Хочу молоток", userTestMap.get(1L), created)
     );
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         List<User> users = new ArrayList<>(userTestMap.values());
         List<Item> items = new ArrayList<>(itemTestMap.values());
         List<ItemRequest> itemRequests = new ArrayList<>(itemRequestTestMap.values());
 
-        for (User user : users){
+        for (User user : users) {
             em.persist(User.builder().name(user.getName()).email(user.getEmail()).build());
         }
         em.flush();
-        for (Item item : items){
+        for (Item item : items) {
             em.persist(Item.builder().name(item.getName())
                 .description(item.getDescription())
                 .userId(item.getUserId())
@@ -72,7 +73,7 @@ public class ItemRequestRepositoryJpaTest {
         }
         em.flush();
 
-        for(ItemRequest itemRequest : itemRequests){
+        for (ItemRequest itemRequest : itemRequests) {
             em.persist(ItemRequest.builder().description(itemRequest.getDescription())
                 .created(itemRequest.getCreated())
                 .requester(itemRequest.getRequester())
@@ -81,16 +82,16 @@ public class ItemRequestRepositoryJpaTest {
     }
 
     @Test
-    void findAllByRequesterIdOrderByIdDescShouldReturnListOfUserRequests(){
+    void findAllByRequesterIdOrderByIdDescShouldReturnListOfUserRequests() {
         List<ItemRequest> itemRequests = repository.findAllByRequesterIdOrderByIdDesc(1L);
-        Assertions.assertEquals(2,itemRequests.size());
+        Assertions.assertEquals(2, itemRequests.size());
     }
 
     @Test
-    void findByRequesterNotOrderByIdDescShouldReturnListOfNotUserRequests(){
+    void findByRequesterNotOrderByIdDescShouldReturnListOfNotUserRequests() {
         List<ItemRequest> itemRequests = repository
-            .findByRequesterNotOrderByIdDesc(1L,page);
-        Assertions.assertEquals(1,itemRequests.size());
+            .findByRequesterNotOrderByIdDesc(1L, page);
+        Assertions.assertEquals(1, itemRequests.size());
     }
 
 
