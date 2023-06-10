@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,8 +26,8 @@ import ru.practicum.shareit.item.service.ItemService;
 @RestController
 @RequestMapping("/items")
 @Slf4j
-@RequiredArgsConstructor
 @Validated
+@AllArgsConstructor
 public class ItemController {
 
     private final ItemService itemService;
@@ -80,7 +80,7 @@ public class ItemController {
         log.debug("Получен запрос на получение всех предметов пользователя с id" + userId
             + " и фильтром " + text);
         ArrayList<Item> items = new ArrayList<>(
-            itemService.getItemsByNameOrDescriptionSearch(text,from,size));
+            itemService.getItemsByNameOrDescriptionSearch(text, from, size));
         return itemMapper
             .convertToDtoListOfItems(items, itemService.isUserAnItemsOwner(userId, items));
     }
@@ -90,7 +90,7 @@ public class ItemController {
         @RequestParam(defaultValue = "0") @Min(0) Integer from,
         @RequestParam(defaultValue = "10") @Min(1) Integer size) {
         log.debug("Получен запрос на получение всех предметов пользователя с id" + userId);
-        ArrayList<Item> items = new ArrayList<>(itemService.getUserItems(userId,from,size));
+        ArrayList<Item> items = new ArrayList<>(itemService.getUserItems(userId, from, size));
         return itemMapper
             .convertToDtoListOfItems(items, itemService.isUserAnItemsOwner(userId, items));
     }

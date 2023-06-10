@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking.controller;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +27,7 @@ import ru.practicum.shareit.booking.service.BookingService;
 @RestController
 @RequestMapping(path = "/bookings")
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Validated
 public class BookingController {
 

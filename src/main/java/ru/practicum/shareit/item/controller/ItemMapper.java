@@ -2,7 +2,7 @@ package ru.practicum.shareit.item.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.controller.BookingMapper;
@@ -15,8 +15,9 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.service.ItemService;
 
+
+@AllArgsConstructor
 @Component
-@RequiredArgsConstructor
 public class ItemMapper {
 
     private final ModelMapper modelMapper = new ModelMapper();
@@ -33,7 +34,7 @@ public class ItemMapper {
         itemDto.setNextBooking(bookingMapper.convertToShort(nextBooking));
         List<Comment> comments = commentRepository.findAllByItemId(item.getId());
         itemDto.setComments(commentMapper.convertToDtoListOfComments(comments));
-        if(item.getRequest() != null){
+        if (item.getRequest() != null) {
             itemDto.setRequestId(item.getRequest().getId());
         }
 
@@ -46,7 +47,7 @@ public class ItemMapper {
         itemDto.setNextBooking(null);
         List<Comment> comments = commentRepository.findAllByItemId(item.getId());
         itemDto.setComments(commentMapper.convertToDtoListOfComments(comments));
-        if(item.getRequest() != null){
+        if (item.getRequest() != null) {
             itemDto.setRequestId(item.getRequest().getId());
         }
         return itemDto;

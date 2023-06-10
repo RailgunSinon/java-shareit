@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.ValidationException;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import ru.practicum.shareit.user.service.UserService;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
@@ -118,7 +118,7 @@ public class BookingServiceImpl implements BookingService {
                 return bookingRepository.findAllByBookerIdAndStatusOrderByBookingStartDesc(userId,
                     Status.REJECTED, page);
             default:
-                throw new RuntimeException("Unknown state: UNSUPPORTED_STATUS");
+                throw new RuntimeException("Unknown state: " + state);
         }
     }
 

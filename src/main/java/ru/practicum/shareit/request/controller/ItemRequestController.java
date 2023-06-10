@@ -3,6 +3,7 @@ package ru.practicum.shareit.request.controller;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +25,7 @@ import ru.practicum.shareit.request.service.RequestService;
 @RestController
 @RequestMapping(path = "/requests")
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Validated
 public class ItemRequestController {
 

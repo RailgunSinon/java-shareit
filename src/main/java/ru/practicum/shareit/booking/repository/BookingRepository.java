@@ -54,7 +54,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
         Status status);
 
     @Query(value =
-        "select b from Booking b where b.item.id = ?1 and ( b.bookingEnd < ?2 or b.bookingStart < ?2) "
+        "select b from Booking b where b.item.id = ?1 "
+            + "and ( b.bookingEnd < ?2 or b.bookingStart < ?2) "
             + "and b.status <> ?3 order by b.bookingEnd desc")
     List<Booking> findAllByItemAndStatePast(long itemId, LocalDateTime localDateTime,
         Status status);
