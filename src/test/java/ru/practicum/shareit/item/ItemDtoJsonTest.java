@@ -10,7 +10,7 @@ import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 @JsonTest
-public class itemDtoJsonTest {
+public class ItemDtoJsonTest {
 
     @Autowired
     private JacksonTester<ItemDto> itemDtoJacksonTester;

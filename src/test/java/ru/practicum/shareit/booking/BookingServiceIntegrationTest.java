@@ -27,7 +27,7 @@ public class BookingServiceIntegrationTest {
     private final BookingService bookingService;
     private final ItemService itemService;
     private final UserService userService;
-    public final DateTimeFormatter DATE_FORMAT = DateTimeFormatter
+    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter
         .ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     private final Map<Long, User> userTestMap = Map.of(
@@ -89,8 +89,8 @@ public class BookingServiceIntegrationTest {
         Assertions.assertEquals(bookingOne.getStatus(), booking.getStatus());
         Assertions.assertEquals(bookingOne.getBookingStart().format(DATE_FORMAT),
             booking.getBookingStart().format(DATE_FORMAT));
-        Assertions.assertEquals(bookingOne.getBookingEnd().format(DATE_FORMAT)
-            , booking.getBookingEnd().format(DATE_FORMAT));
+        Assertions.assertEquals(bookingOne.getBookingEnd().format(DATE_FORMAT),
+            booking.getBookingEnd().format(DATE_FORMAT));
     }
 
     @Test
