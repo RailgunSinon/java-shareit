@@ -7,9 +7,9 @@ public interface RequestService {
 
     void addItemRequest(ItemRequest itemRequest);
 
-    ItemRequest getItemRequestById(long requestId,long userId);
+    ItemRequest getItemRequestById(long requestId, long userId);
 
     List<ItemRequest> getUserRequestsById(long userId);
 
-    List<ItemRequest> getOtherUsersRequests(long userId,int from,int size);
+    List<ItemRequest> getOtherUsersRequests(long userId, int from, int size);
 }

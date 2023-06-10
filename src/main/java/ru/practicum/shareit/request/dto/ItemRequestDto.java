@@ -17,6 +17,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemRequestDto {
+
     @PositiveOrZero
     private long id;
     @NotNull

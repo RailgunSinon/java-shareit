@@ -26,13 +26,13 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public ItemRequest getItemRequestById(long requestId,long userId) {
+    public ItemRequest getItemRequestById(long requestId, long userId) {
         log.info("Получение запроса на предмет с id " + requestId);
         Optional<ItemRequest> optionalItemRequest = itemRequestRepository.findById(requestId);
-        if(!userService.isUserExists(userId)){
+        if (!userService.isUserExists(userId)) {
             throw new NotFoundException("Пользователь не был найден");
         }
-        if(optionalItemRequest.isEmpty()){
+        if (optionalItemRequest.isEmpty()) {
             throw new NotFoundException("Запрос на предмет с id " + requestId + " не обнаружен!");
         }
         return optionalItemRequest.get();
@@ -41,7 +41,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<ItemRequest> getUserRequestsById(long userId) {
         log.info("Получение запросов на предметы от пользователя с id " + userId);
-        if(!userService.isUserExists(userId)){
+        if (!userService.isUserExists(userId)) {
             throw new NotFoundException("Пользователь не был найден");
         }
         return itemRequestRepository.findAllByRequesterIdOrderByIdDesc(userId);
@@ -50,9 +50,9 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<ItemRequest> getOtherUsersRequests(long userId, int from, int size) {
         PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
-        if(!userService.isUserExists(userId)){
+        if (!userService.isUserExists(userId)) {
             throw new NotFoundException("Пользователь не был найден");
         }
-        return itemRequestRepository.findByRequesterNotOrderByIdDesc(userId,page);
+        return itemRequestRepository.findByRequesterNotOrderByIdDesc(userId, page);
     }
 }

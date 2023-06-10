@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,26 +26,26 @@ public class RequestMapper {
     private final ItemService itemService;
 
     public ItemRequestDto convertToDto(ItemRequest itemRequest) {
-        ItemRequestDto itemRequestDto = modelMapper.map(itemRequest,ItemRequestDto.class);
+        ItemRequestDto itemRequestDto = modelMapper.map(itemRequest, ItemRequestDto.class);
         itemRequestDto.setRequesterId(itemRequest.getId());
         List<Item> items = itemService.getItemsByRequestId(itemRequest.getId());
-        itemRequestDto.setItems(itemMapper.convertToDtoListOfItems(items,false));
+        itemRequestDto.setItems(itemMapper.convertToDtoListOfItems(items, false));
         return itemRequestDto;
     }
 
     public List<ItemRequestDto> convertToDtoListOfItemRequests(List<ItemRequest> itemRequests) {
         List<ItemRequestDto> itemRequestDtos = new ArrayList<>();
-        for (ItemRequest itemRequest : itemRequests){
+        for (ItemRequest itemRequest : itemRequests) {
             itemRequestDtos.add(convertToDto(itemRequest));
         }
         return itemRequestDtos;
     }
 
     public ItemRequest convertToEntity(ItemRequestDto itemRequestDto, long userId) {
-        ItemRequest itemRequest = modelMapper.map(itemRequestDto,ItemRequest.class);
+        ItemRequest itemRequest = modelMapper.map(itemRequestDto, ItemRequest.class);
         User requester = userService.getUserById(userId);
         itemRequest.setRequester(requester);
-        if(itemRequest.getCreated() == null){
+        if (itemRequest.getCreated() == null) {
             itemRequest.setCreated(LocalDateTime.now());
         }
         return itemRequest;
