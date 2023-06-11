@@ -11,6 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.enums.Status;
+import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
@@ -26,6 +30,9 @@ public class ItemServiceIntegrationTest {
     private ItemService itemService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private BookingRepository bookingRepository;
+
     private static final int ITEM_LIST_PAGE_SIZE = 10;
 
     private PageRequest page = PageRequest.of(0, 10);
@@ -51,6 +58,9 @@ public class ItemServiceIntegrationTest {
 
     Comment comment = new Comment(1, "All Good", itemTestMap.get(1L),
         userTestMap.get(2L), created);
+
+    Booking booking = new Booking(1,itemTestMap.get(1L),userTestMap.get(2L), Status.APPROVED,
+        created.minusHours(4),created.minusHours(1));
 
     @BeforeEach
     void setUp() {
@@ -121,6 +131,38 @@ public class ItemServiceIntegrationTest {
     }
 
     @Test
+    void addCommentToItemShouldAddAComment(){
+        itemService.addItem(itemTestMap.get(1L));
+        itemService.addItem(itemTestMap.get(2L));
+        itemService.addItem(itemTestMap.get(3L));
+        itemService.addItem(itemTestMap.get(4L));
+        bookingRepository.save(booking);
+        itemService.addCommentToItem(comment);
+
+        Comment result = itemService.getCommentById(comment.getId());
+
+        Assertions.assertEquals(comment.getId(),result.getId());
+    }
+
+    @Test
+    void getCommentByIdToItemShouldAddAComment(){
+        itemService.addItem(itemTestMap.get(1L));
+        itemService.addItem(itemTestMap.get(2L));
+        itemService.addItem(itemTestMap.get(3L));
+        itemService.addItem(itemTestMap.get(4L));
+        bookingRepository.save(booking);
+        itemService.addCommentToItem(comment);
+
+        Comment result = itemService.getCommentById(comment.getId());
+
+        Assertions.assertEquals(comment.getId(),result.getId());
+        Assertions.assertEquals(comment.getText(),result.getText());
+        Assertions.assertEquals(comment.getCreated(),result.getCreated());
+        Assertions.assertEquals(comment.getAuthor().getId(),result.getAuthor().getId());
+        Assertions.assertEquals(comment.getItem().getId(),result.getItem().getId());
+    }
+
+    @Test
     void getUserItemsShouldReturnListOfItems() {
         itemService.addItem(itemTestMap.get(1L));
         itemService.addItem(itemTestMap.get(2L));
@@ -131,4 +173,6 @@ public class ItemServiceIntegrationTest {
 
         Assertions.assertEquals(3, items.size());
     }
+
+
 }

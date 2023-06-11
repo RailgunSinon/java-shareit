@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.enums.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.model.Comment;
@@ -53,6 +55,9 @@ public class ItemServiceUnitTests {
 
     Comment comment = new Comment(1, "All Good", itemTestMap.get(1L),
         userTestMap.get(2L), created);
+
+    Booking booking = new Booking(1,itemTestMap.get(1L),userTestMap.get(2L), Status.APPROVED,
+        created.minusHours(4),created.minusHours(1));
 
     @BeforeEach
     void setUp() {
@@ -170,6 +175,7 @@ public class ItemServiceUnitTests {
 
         Assertions.assertFalse(flag);
     }
+
 
     @Test
     void getCommentByIdToItemShouldAddComment() {
