@@ -14,7 +14,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.enums.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
@@ -59,8 +58,8 @@ public class ItemServiceIntegrationTest {
     Comment comment = new Comment(1, "All Good", itemTestMap.get(1L),
         userTestMap.get(2L), created);
 
-    Booking booking = new Booking(1,itemTestMap.get(1L),userTestMap.get(2L), Status.APPROVED,
-        created.minusHours(4),created.minusHours(1));
+    Booking booking = new Booking(1, itemTestMap.get(1L), userTestMap.get(2L), Status.APPROVED,
+        created.minusHours(4), created.minusHours(1));
 
     @BeforeEach
     void setUp() {
@@ -131,7 +130,7 @@ public class ItemServiceIntegrationTest {
     }
 
     @Test
-    void addCommentToItemShouldAddAComment(){
+    void addCommentToItemShouldAddAComment() {
         itemService.addItem(itemTestMap.get(1L));
         itemService.addItem(itemTestMap.get(2L));
         itemService.addItem(itemTestMap.get(3L));
@@ -141,11 +140,11 @@ public class ItemServiceIntegrationTest {
 
         Comment result = itemService.getCommentById(comment.getId());
 
-        Assertions.assertEquals(comment.getId(),result.getId());
+        Assertions.assertEquals(comment.getId(), result.getId());
     }
 
     @Test
-    void getCommentByIdToItemShouldAddAComment(){
+    void getCommentByIdToItemShouldAddAComment() {
         itemService.addItem(itemTestMap.get(1L));
         itemService.addItem(itemTestMap.get(2L));
         itemService.addItem(itemTestMap.get(3L));
@@ -155,11 +154,11 @@ public class ItemServiceIntegrationTest {
 
         Comment result = itemService.getCommentById(comment.getId());
 
-        Assertions.assertEquals(comment.getId(),result.getId());
-        Assertions.assertEquals(comment.getText(),result.getText());
-        Assertions.assertEquals(comment.getCreated(),result.getCreated());
-        Assertions.assertEquals(comment.getAuthor().getId(),result.getAuthor().getId());
-        Assertions.assertEquals(comment.getItem().getId(),result.getItem().getId());
+        Assertions.assertEquals(comment.getId(), result.getId());
+        Assertions.assertEquals(comment.getText(), result.getText());
+        Assertions.assertEquals(comment.getCreated(), result.getCreated());
+        Assertions.assertEquals(comment.getAuthor().getId(), result.getAuthor().getId());
+        Assertions.assertEquals(comment.getItem().getId(), result.getItem().getId());
     }
 
     @Test
