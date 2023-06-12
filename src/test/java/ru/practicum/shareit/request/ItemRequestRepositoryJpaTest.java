@@ -49,9 +49,12 @@ public class ItemRequestRepositoryJpaTest {
     );
 
     private final Map<Long, ItemRequest> itemRequestTestMap = Map.of(
-        1L, new ItemRequest(1, "Хочу дрель", userTestMap.get(1L), created),
-        2L, new ItemRequest(2, "Хочу дрель", userTestMap.get(2L), created),
-        3L, new ItemRequest(3, "Хочу молоток", userTestMap.get(1L), created)
+        1L, new ItemRequest(1, "Хочу дрель", userTestMap.get(1L),
+            created, null),
+        2L, new ItemRequest(2, "Хочу дрель", userTestMap.get(2L),
+            created, null),
+        3L, new ItemRequest(3, "Хочу молоток", userTestMap.get(1L),
+            created, null)
     );
 
     @BeforeEach

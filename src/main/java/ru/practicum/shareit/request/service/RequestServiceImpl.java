@@ -1,5 +1,6 @@
 package ru.practicum.shareit.request.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -7,8 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.NotFoundException;
+import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.repository.RequestRepository;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 @Slf4j
@@ -18,11 +21,15 @@ public class RequestServiceImpl implements RequestService {
 
     private final RequestRepository itemRequestRepository;
     private final UserService userService;
+    private final ItemService itemService;
 
     @Override
-    public void addItemRequest(ItemRequest itemRequest) {
+    public ItemRequest addItemRequest(ItemRequest itemRequest, long userId) {
         log.info("Создание нового запроса на предмет");
-        itemRequestRepository.save(itemRequest);
+        User requester = userService.getUserById(userId);
+        itemRequest.setRequester(requester);
+        ItemRequest savedRequest = itemRequestRepository.save(itemRequest);
+        return savedRequest;
     }
 
     @Override
@@ -35,6 +42,8 @@ public class RequestServiceImpl implements RequestService {
         if (optionalItemRequest.isEmpty()) {
             throw new NotFoundException("Запрос на предмет с id " + requestId + " не обнаружен!");
         }
+        optionalItemRequest.get()
+            .setItems(itemService.getItemsByRequestId(optionalItemRequest.get().getId()));
         return optionalItemRequest.get();
     }
 
@@ -44,7 +53,9 @@ public class RequestServiceImpl implements RequestService {
         if (!userService.isUserExists(userId)) {
             throw new NotFoundException("Пользователь не был найден");
         }
-        return itemRequestRepository.findAllByRequesterIdOrderByIdDesc(userId);
+
+        return setItemsForListOfRequests(
+            itemRequestRepository.findAllByRequesterIdOrderByIdDesc(userId));
     }
 
     @Override
@@ -53,8 +64,17 @@ public class RequestServiceImpl implements RequestService {
         if (!userService.isUserExists(userId)) {
             throw new NotFoundException("Пользователь не был найден");
         }
-        return itemRequestRepository.findByRequesterNotOrderByIdDesc(userId, page);
+        return setItemsForListOfRequests(
+            itemRequestRepository.findByRequesterNotOrderByIdDesc(userId, page));
     }
 
-
+    private List<ItemRequest> setItemsForListOfRequests(List<ItemRequest> itemRequests) {
+        if (itemRequests == null || itemRequests.size() == 0 || itemRequests.isEmpty()) {
+            return new ArrayList<>();
+        }
+        for (ItemRequest itemRequest : itemRequests) {
+            itemRequest.setItems(itemService.getItemsByRequestId(itemRequest.getId()));
+        }
+        return itemRequests;
+    }
 }

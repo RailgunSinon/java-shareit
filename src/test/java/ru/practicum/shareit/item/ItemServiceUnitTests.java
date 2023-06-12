@@ -22,7 +22,6 @@ import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
-import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -63,9 +62,9 @@ public class ItemServiceUnitTests {
 
     Booking booking = new Booking(1, itemTestMap.get(1L), userTestMap.get(2L), Status.APPROVED,
         created.minusHours(4), created.minusHours(1));
-
+/*
     ItemRequest itemRequest = new ItemRequest(1, "Ищу дрель", userTestMap.get(3L),
-        created);
+        created,null);*/
 
     @BeforeEach
     void setUp() {

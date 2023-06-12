@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,9 +62,12 @@ public class ItemRequestControllerWebTest {
     );
 
     private final Map<Long, ItemRequest> itemRequestTestMap = Map.of(
-        1L, new ItemRequest(1, "Хочу дрель", userTestMap.get(1L), created),
-        2L, new ItemRequest(2, "Хочу дрель", userTestMap.get(2L), created),
-        3L, new ItemRequest(3, "Хочу молоток", userTestMap.get(1L), created)
+        1L, new ItemRequest(1, "Хочу дрель", userTestMap.get(1L),
+            created, null),
+        2L, new ItemRequest(2, "Хочу дрель", userTestMap.get(2L),
+            created, null),
+        3L, new ItemRequest(3, "Хочу молоток", userTestMap.get(1L),
+            created, null)
     );
 
     @BeforeEach
@@ -91,6 +95,13 @@ public class ItemRequestControllerWebTest {
             .thenReturn(List.of(itemRequestTestMap.get(2L)));
         Mockito.when(requestService.getItemRequestById(1L, 1L))
             .thenReturn(itemRequestTestMap.get(1L));
+
+        Mockito.when(itemService.getItemsByRequestId(itemRequestTestMap.get(1L).getId()))
+            .thenReturn(new ArrayList<>());
+        Mockito
+            .when(requestService.addItemRequest(Mockito.any(ItemRequest.class), Mockito.anyLong()))
+            .thenReturn(itemRequestTestMap.get(1L));
+
     }
 
     @Test
@@ -145,7 +156,7 @@ public class ItemRequestControllerWebTest {
     @Test
     void addItemRequestShouldReturnAllOk() throws Exception {
         ItemRequestDto itemRequestDto = new ItemRequestDto(1L, "Need Healing",
-            2L, created, null);
+            1L, created, null);
 
         mvc.perform(post("/requests")
             .header("X-Sharer-User-Id", 1)

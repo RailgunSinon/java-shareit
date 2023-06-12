@@ -36,10 +36,8 @@ public class ItemRequestController {
     public ItemRequestDto addRequest(@Valid @RequestBody ItemRequestDto itemRequestDto,
         @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.debug("Получен запрос на добавление нового запроса на предмет");
-        ItemRequest itemRequest = requestMapper.convertToEntity(itemRequestDto, userId);
-        requestService.addItemRequest(itemRequest);
-        return requestMapper
-            .convertToDto(requestService.getItemRequestById(itemRequest.getId(), userId));
+        ItemRequest itemRequest = requestMapper.convertToEntity(itemRequestDto);
+        return requestMapper.convertToDto(requestService.addItemRequest(itemRequest, userId));
     }
 
     @GetMapping("/{id}")

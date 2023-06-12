@@ -34,9 +34,12 @@ public class ItemRequestServiceIntegrationTest {
     );
 
     private final Map<Long, ItemRequest> itemRequestTestMap = Map.of(
-        1L, new ItemRequest(1, "Хочу дрель", userTestMap.get(1L), created),
-        2L, new ItemRequest(2, "Хочу дрель", userTestMap.get(2L), created),
-        3L, new ItemRequest(3, "Хочу молоток", userTestMap.get(1L), created)
+        1L, new ItemRequest(1, "Хочу дрель", userTestMap.get(1L),
+            created, null),
+        2L, new ItemRequest(2, "Хочу дрель", userTestMap.get(2L),
+            created, null),
+        3L, new ItemRequest(3, "Хочу молоток", userTestMap.get(1L),
+            created, null)
     );
 
     @BeforeEach
@@ -48,9 +51,10 @@ public class ItemRequestServiceIntegrationTest {
 
     @Test
     void addItemRequestShouldWriteToDbAndReturn() {
-        requestService.addItemRequest(itemRequestTestMap.get(1L));
+        ItemRequest itemRequest = requestService.addItemRequest(itemRequestTestMap.get(1L),
+            itemRequestTestMap.get(1L).getRequester().getId());
 
-        ItemRequest itemRequest = requestService.getItemRequestById(1L, 1L);
+        // ItemRequest itemRequest = requestService.getItemRequestById(1L, 1L);
 
         Assertions.assertEquals(itemRequestTestMap.get(1L).getId(), itemRequest.getId());
         Assertions.assertEquals(itemRequestTestMap.get(1L).getCreated(), itemRequest.getCreated());
@@ -62,7 +66,8 @@ public class ItemRequestServiceIntegrationTest {
 
     @Test
     void getItemRequestByIdShouldReturnItemRequest() {
-        requestService.addItemRequest(itemRequestTestMap.get(3L));
+        requestService.addItemRequest(itemRequestTestMap.get(3L),
+            itemRequestTestMap.get(3L).getRequester().getId());
 
         ItemRequest itemRequest = requestService.getItemRequestById(1L, 1L);
 
@@ -76,9 +81,12 @@ public class ItemRequestServiceIntegrationTest {
 
     @Test
     void getUserRequestsByIdShouldReturnListOfItemRequests() {
-        requestService.addItemRequest(itemRequestTestMap.get(1L));
-        requestService.addItemRequest(itemRequestTestMap.get(2L));
-        requestService.addItemRequest(itemRequestTestMap.get(3L));
+        requestService.addItemRequest(itemRequestTestMap.get(1L),
+            itemRequestTestMap.get(1L).getRequester().getId());
+        requestService.addItemRequest(itemRequestTestMap.get(2L),
+            itemRequestTestMap.get(2L).getRequester().getId());
+        requestService.addItemRequest(itemRequestTestMap.get(3L),
+            itemRequestTestMap.get(3L).getRequester().getId());
 
         List<ItemRequest> itemRequests = requestService.getUserRequestsById(1L);
 
@@ -87,9 +95,12 @@ public class ItemRequestServiceIntegrationTest {
 
     @Test
     void getOtherUsersRequestsShouldReturnListOfItemRequests() {
-        requestService.addItemRequest(itemRequestTestMap.get(1L));
-        requestService.addItemRequest(itemRequestTestMap.get(2L));
-        requestService.addItemRequest(itemRequestTestMap.get(3L));
+        requestService.addItemRequest(itemRequestTestMap.get(1L),
+            itemRequestTestMap.get(1L).getRequester().getId());
+        requestService.addItemRequest(itemRequestTestMap.get(2L),
+            itemRequestTestMap.get(2L).getRequester().getId());
+        requestService.addItemRequest(itemRequestTestMap.get(3L),
+            itemRequestTestMap.get(3L).getRequester().getId());
 
         List<ItemRequest> itemRequests = requestService.getOtherUsersRequests(1L,
             0, 10);

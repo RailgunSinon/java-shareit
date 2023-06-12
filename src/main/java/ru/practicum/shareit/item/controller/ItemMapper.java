@@ -54,6 +54,9 @@ public class ItemMapper {
     }
 
     public List<ItemDto> convertToDtoListOfItems(List<Item> items, boolean isOwner) {
+        if (items == null || items.isEmpty() || items.size() == 0) {
+            return new ArrayList<>();
+        }
         ArrayList<ItemDto> itemDtos = new ArrayList<>();
         for (Item item : items) {
             if (isOwner) {
