@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.controller.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
@@ -20,7 +19,6 @@ import ru.practicum.shareit.user.service.UserService;
 public class RequestMapper {
 
     private final ModelMapper modelMapper = new ModelMapper();
-    @Autowired
     private final ItemMapper itemMapper;
     private final UserService userService;
     private final ItemService itemService;

@@ -1,9 +1,11 @@
 package ru.practicum.shareit.item;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.validation.ValidationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -55,9 +58,14 @@ public class ItemServiceUnitTests {
 
     Comment comment = new Comment(1, "All Good", itemTestMap.get(1L),
         userTestMap.get(2L), created);
+    Comment commentBad = new Comment(1, "All Good", itemTestMap.get(2L),
+        userTestMap.get(3L), created);
 
-    Booking booking = new Booking(1,itemTestMap.get(1L),userTestMap.get(2L), Status.APPROVED,
-        created.minusHours(4),created.minusHours(1));
+    Booking booking = new Booking(1, itemTestMap.get(1L), userTestMap.get(2L), Status.APPROVED,
+        created.minusHours(4), created.minusHours(1));
+
+    ItemRequest itemRequest = new ItemRequest(1, "Ищу дрель", userTestMap.get(3L),
+        created);
 
     @BeforeEach
     void setUp() {
@@ -90,6 +98,18 @@ public class ItemServiceUnitTests {
             .thenReturn(List.of(itemTestMap.get(1L)));
 
         Mockito.when(mockCommentRepository.findById(1L)).thenReturn(Optional.ofNullable(comment));
+        Mockito.when(mockBookingRepository.findAllByBookerIdOrderByBookingStartDesc(2, page))
+            .thenReturn(List.of(booking));
+        Mockito.when(mockBookingRepository.findAllByBookerIdOrderByBookingStartDesc(3, page))
+            .thenReturn(List.of(booking));
+
+        Mockito.when(mockItemRepository.findAllByRequestIdOrderById(1L, page))
+            .thenReturn(List.of(itemTestMap.get(1L)));
+
+        Mockito.when(mockUserService.isUserExists(1L)).thenReturn(true);
+        Mockito.when(mockUserService.isUserExists(2L)).thenReturn(true);
+        Mockito.when(mockUserService.isUserExists(3L)).thenReturn(true);
+        Mockito.when(mockUserService.isUserExists(4L)).thenReturn(false);
     }
 
     @Test
@@ -176,9 +196,61 @@ public class ItemServiceUnitTests {
         Assertions.assertFalse(flag);
     }
 
+    @Test
+    void isUserAnItemOwnerShouldReturnTrue() {
+        boolean flag = itemService.isUserAnItemOwner(1L, itemTestMap.get(1L));
+
+        Assertions.assertTrue(flag);
+    }
 
     @Test
-    void getCommentByIdToItemShouldAddComment() {
+    void isUserAnItemOwnerShouldReturnFalse() {
+        boolean flag = itemService.isUserAnItemOwner(1L, itemTestMap.get(3L));
+
+        Assertions.assertFalse(flag);
+    }
+
+    @Test
+    void isUserAnItemsOwnerEmptyListShouldReturnFalse() {
+        boolean flag = itemService.isUserAnItemsOwner(1L, new ArrayList<>());
+
+        Assertions.assertFalse(flag);
+    }
+
+    @Test
+    void isUserAnItemsOwnerShouldReturnFalse() {
+        boolean flag = itemService.isUserAnItemsOwner(1L, List.of(itemTestMap.get(3L),
+            itemTestMap.get(2L)));
+
+        Assertions.assertFalse(flag);
+    }
+
+    @Test
+    void isUserAnItemsOwnerShouldReturnTrue() {
+        boolean flag = itemService.isUserAnItemsOwner(2L, List.of(itemTestMap.get(3L),
+            itemTestMap.get(2L)));
+
+        Assertions.assertTrue(flag);
+    }
+
+    @Test
+    void addCommentToItemShouldAddComment() {
+        itemService.addCommentToItem(comment);
+        Mockito.verify(mockCommentRepository, Mockito.times(1))
+            .save(comment);
+    }
+
+    @Test
+    void addCommentToItemNotGottenShouldThrowValidationException() {
+        final ValidationException exception = Assertions.assertThrows(ValidationException.class,
+            () -> itemService.addCommentToItem(commentBad)
+        );
+        Assertions.assertEquals("Комментировать могут только бронировавшие вещь "
+            + "пользователи", exception.getMessage());
+    }
+
+    @Test
+    void getCommentByIdToItemShouldReturnComment() {
         Comment result = itemService.getCommentById(1L);
 
         Assertions.assertEquals(comment.getId(), result.getId());
@@ -186,5 +258,28 @@ public class ItemServiceUnitTests {
         Assertions.assertEquals(comment.getCreated(), result.getCreated());
         Assertions.assertEquals(comment.getItem().getId(), result.getItem().getId());
         Assertions.assertEquals(comment.getText(), result.getText());
+    }
+
+    @Test
+    void getItemsByRequestIdShouldReturnItemRequest() {
+        List<Item> items = itemService.getItemsByRequestId(1L);
+
+        Assertions.assertEquals(1, items.size());
+        Mockito.verify(mockItemRepository, Mockito.times(1))
+            .findAllByRequestIdOrderById(1L, page);
+    }
+
+    @Test
+    void isUserExistsOrExceptionUserExistsShouldDoNothing() {
+        itemService.isUserExistsOrException(1L);
+    }
+
+    @Test
+    void isUserExistsOrExceptionUserNotExistsShouldThrowNotFoundException() {
+        final NotFoundException exception = Assertions.assertThrows(NotFoundException.class,
+            () -> itemService.isUserExistsOrException(4L)
+        );
+
+        Assertions.assertEquals("Пользователь не найден!", exception.getMessage());
     }
 }

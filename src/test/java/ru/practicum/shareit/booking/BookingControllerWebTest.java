@@ -135,6 +135,20 @@ public class BookingControllerWebTest {
     }
 
     @Test
+    void addBookingEndBeforeStartShouldReturnBadRequest() throws Exception {
+        BookingRequestDto bookingRequestDto = new BookingRequestDto(1,
+            itemTestMap.get(1L).getId(), curDate.plusHours(4), curDate.plusHours(3));
+
+        mvc.perform(post("/bookings").header("X-Sharer-User-Id", 2)
+            .content(mapper.writeValueAsString(bookingRequestDto))
+            .characterEncoding(StandardCharsets.UTF_8)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().is(in(List.of(400))));
+    }
+
+    @Test
     void addBookingBadItemIdShouldReturnBadRequest() throws Exception {
         BookingRequestDto bookingRequestDto = new BookingRequestDto(1, -5,
             curDate.plusHours(2), curDate.minusHours(2));
@@ -201,7 +215,7 @@ public class BookingControllerWebTest {
     }
 
     @Test
-    void getCurrentBookingForOwnerReturnBadRequest() throws Exception {
+    void getCurrentBookingForOwnerShouldReturnBadRequest() throws Exception {
         mvc.perform(get("/bookings").header("X-Sharer-User-Id", 1)
             .param("from", String.valueOf(-1)))
             .andDo(MockMvcResultHandlers.print())
@@ -219,4 +233,15 @@ public class BookingControllerWebTest {
             .andExpect(jsonPath("$", hasSize(3)));
     }
 
+    @Test
+    void getCurrentBookingForUserBadStatusShouldReturnBadRequest() throws Exception {
+        Mockito.when(bookingService.getAllBookingOfUserWithState(1,"COMPLEX",
+            0,10))
+            .thenThrow(new RuntimeException("Unknown state: " + "COMPLEX"));
+
+        mvc.perform(get("/bookings").header("X-Sharer-User-Id", 1)
+        .param("state","COMPLEX"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().is(in(List.of(400,500))));
+    }
 }

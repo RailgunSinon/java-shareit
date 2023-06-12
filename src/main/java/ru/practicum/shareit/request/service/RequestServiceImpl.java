@@ -55,4 +55,6 @@ public class RequestServiceImpl implements RequestService {
         }
         return itemRequestRepository.findByRequesterNotOrderByIdDesc(userId, page);
     }
+
+
 }

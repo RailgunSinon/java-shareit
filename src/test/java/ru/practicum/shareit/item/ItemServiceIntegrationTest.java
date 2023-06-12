@@ -32,8 +32,6 @@ public class ItemServiceIntegrationTest {
     @Autowired
     private BookingRepository bookingRepository;
 
-    private static final int ITEM_LIST_PAGE_SIZE = 10;
-
     private PageRequest page = PageRequest.of(0, 10);
     LocalDateTime created = LocalDateTime.of(2023, 5, 19,
         10, 0, 0);
