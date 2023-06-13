@@ -3,8 +3,10 @@ package ru.practicum.shareit.item.controller;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import javax.validation.constraints.Min;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,7 +26,8 @@ import ru.practicum.shareit.item.service.ItemService;
 @RestController
 @RequestMapping("/items")
 @Slf4j
-@RequiredArgsConstructor
+@Validated
+@AllArgsConstructor
 public class ItemController {
 
     private final ItemService itemService;
@@ -71,19 +74,23 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDto> getItemsByUserSearch(@RequestParam String text,
-        @RequestHeader("X-Sharer-User-Id") Long userId) {
+        @RequestHeader("X-Sharer-User-Id") Long userId,
+        @RequestParam(defaultValue = "0") @Min(0) Integer from,
+        @RequestParam(defaultValue = "10") @Min(1) Integer size) {
         log.debug("Получен запрос на получение всех предметов пользователя с id" + userId
             + " и фильтром " + text);
         ArrayList<Item> items = new ArrayList<>(
-            itemService.getItemsByNameOrDescriptionSearch(text));
+            itemService.getItemsByNameOrDescriptionSearch(text, from, size));
         return itemMapper
             .convertToDtoListOfItems(items, itemService.isUserAnItemsOwner(userId, items));
     }
 
     @GetMapping
-    public List<ItemDto> getAllUserItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public List<ItemDto> getAllUserItems(@RequestHeader("X-Sharer-User-Id") Long userId,
+        @RequestParam(defaultValue = "0") @Min(0) Integer from,
+        @RequestParam(defaultValue = "10") @Min(1) Integer size) {
         log.debug("Получен запрос на получение всех предметов пользователя с id" + userId);
-        ArrayList<Item> items = new ArrayList<>(itemService.getUserItems(userId));
+        ArrayList<Item> items = new ArrayList<>(itemService.getUserItems(userId, from, size));
         return itemMapper
             .convertToDtoListOfItems(items, itemService.isUserAnItemsOwner(userId, items));
     }

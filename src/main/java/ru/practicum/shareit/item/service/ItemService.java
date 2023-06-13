@@ -14,9 +14,9 @@ public interface ItemService {
 
     void deleteItemById(long itemId);
 
-    List<Item> getItemsByNameOrDescriptionSearch(String text);
+    List<Item> getItemsByNameOrDescriptionSearch(String text, int from, int size);
 
-    List<Item> getUserItems(long userId);
+    List<Item> getUserItems(long userId, int from, int size);
 
     boolean isItemExists(long itemId);
 
@@ -31,4 +31,6 @@ public interface ItemService {
     void addCommentToItem(Comment comment);
 
     Comment getCommentById(long commentId);
+
+    List<Item> getItemsByRequestId(long requestId);
 }

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.exceptionHandlers.Entity.ErrorResponse;
-import ru.practicum.shareit.exceptions.AlreadyExistsException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.exceptions.StateNotSupportedException;
 
@@ -43,19 +42,10 @@ public class GlobalControllerExceptionHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String, String> handleAlreadyExistsException(
-        final AlreadyExistsException exception) {
-        log.error("Сущность уже сущетсвует!");
-        return Map.of("Пользователь или предмет уже сущетсвует!", exception.getMessage());
-    }
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleStateNotSupportedException(
         final StateNotSupportedException exception) {
         log.error("Ошибка получения состояния бронирования");
         return new ErrorResponse(400, "Bad Request", exception.getMessage());
     }
-
 }
