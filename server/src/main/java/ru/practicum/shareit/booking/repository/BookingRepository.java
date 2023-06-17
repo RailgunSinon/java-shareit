@@ -19,7 +19,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
         LocalDateTime localDateTime, Pageable pageable);
 
     @Query(value = "select b from Booking b where b.booker.id = ?1 and b.bookingStart < ?2 "
-        + "and b.bookingEnd > ?2 order by b.bookingStart desc")
+        + "and b.bookingEnd > ?2 order by b.bookingStart asc")
     List<Booking> findAllByBookerIdAndStartBeforeAndEndAfter(long bookerId,
         LocalDateTime localDateTime, Pageable pageable);
 

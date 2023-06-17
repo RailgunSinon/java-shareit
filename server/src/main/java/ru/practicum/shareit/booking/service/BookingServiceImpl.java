@@ -117,17 +117,11 @@ public class BookingServiceImpl implements BookingService {
                     .findAllByBookerIdOrderByBookingStartDesc(userId,page);
                 return bookingsWait.stream().filter(booking -> booking.getStatus() == Status.WAITING)
                     .collect(Collectors.toList());
-                /*
-                return bookingRepository.findAllByBookerIdAndStatusOrderByBookingStartDesc(userId,
-                    Status.WAITING.name(), page);*/
             case REJECTED:
                 List<Booking> bookingsRej = bookingRepository
                     .findAllByBookerIdOrderByBookingStartDesc(userId,page);
                 return bookingsRej.stream().filter(booking -> booking.getStatus() == Status.REJECTED)
                     .collect(Collectors.toList());
-                /*
-                return bookingRepository.findAllByBookerIdAndStatusOrderByBookingStartDesc(userId,
-                    Status.REJECTED.name(), page);*/
             default:
                 throw new RuntimeException("Unknown state: " + state);
         }
@@ -162,16 +156,11 @@ public class BookingServiceImpl implements BookingService {
                 List<Booking> bookingsWait = bookingRepository.findAllByOwnerId(userId, page);
                 return bookingsWait.stream().filter(booking -> booking.getStatus() == Status.WAITING)
                     .collect(Collectors.toList());
-                /*
-                return bookingRepository.findAllByOwnerIdAndState(userId, Status.WAITING.name(),
-                    page);*/
+
             case REJECTED:
                 List<Booking> bookingsRej = bookingRepository.findAllByOwnerId(userId, page);
                 return bookingsRej.stream().filter(booking -> booking.getStatus() == Status.REJECTED)
                     .collect(Collectors.toList());
-                /*
-                return bookingRepository.findAllByOwnerIdAndState(userId, Status.REJECTED.name(),
-                    page);*/
             default:
                 throw new RuntimeException("Unknown state: " + state);
         }
