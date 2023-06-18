@@ -37,8 +37,3 @@ services:
       POSTGRES_PASSWORD: shareit
       POSTGRES_USER: shareit
       POSTGRES_DB: shareit
-    volumes:
-      - pg-data:/var/lib/postgresql/data/
-
-volumes:
-  pg-data:
