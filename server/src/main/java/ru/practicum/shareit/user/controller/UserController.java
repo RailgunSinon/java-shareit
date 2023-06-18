@@ -2,7 +2,6 @@ package ru.practicum.shareit.user.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +29,7 @@ public class UserController {
     private final UserMapper mapper;
 
     @PostMapping
-    public UserDto addUser(@Valid @RequestBody UserDto userDto) {
+    public UserDto addUser(@RequestBody UserDto userDto) {
         log.debug("Получен запрос на добавление пользователя");
         User user = mapper.convertToEntity(userService, userDto, 0L);
         userService.addUser(user);

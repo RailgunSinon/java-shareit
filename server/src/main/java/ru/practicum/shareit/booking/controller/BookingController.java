@@ -1,8 +1,6 @@
 package ru.practicum.shareit.booking.controller;
 
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +32,7 @@ public class BookingController {
     private final BookingMapper mapper;
 
     @PostMapping
-    public BookingDto addBooking(@Valid @RequestBody BookingRequestDto bookingRequestDto,
+    public BookingDto addBooking(@RequestBody BookingRequestDto bookingRequestDto,
         @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.debug("Получен запрос на добавление брони предмета");
         Booking booking = mapper.convertToEntity(bookingRequestDto);
@@ -61,8 +59,8 @@ public class BookingController {
     public List<BookingDto> getCurrentBookingForUser(
         @RequestParam(required = false, defaultValue = "ALL") String state,
         @RequestHeader("X-Sharer-User-Id") Long userId,
-        @RequestParam(defaultValue = "0") @Min(0) Integer from,
-        @RequestParam(defaultValue = "10") @Min(1) Integer size) {
+        @RequestParam(defaultValue = "0") Integer from,
+        @RequestParam(defaultValue = "10") Integer size) {
         log.debug("Получен запрос на получение информации о брони предметов пользователя");
         return mapper.convertToDtoListOfBooking(
             bookingService.getAllBookingOfUserWithState(userId, state, from, size));
@@ -72,8 +70,8 @@ public class BookingController {
     public List<BookingDto> getCurrentBookingForOwner(
         @RequestParam(required = false, defaultValue = "ALL") String state,
         @RequestHeader("X-Sharer-User-Id") Long userId,
-        @RequestParam(defaultValue = "0") @Min(0) Integer from,
-        @RequestParam(defaultValue = "10") @Min(1) Integer size) {
+        @RequestParam(defaultValue = "0") Integer from,
+        @RequestParam(defaultValue = "10") Integer size) {
         log.debug("Получен запрос на получение информации о брони предметов владельца");
         return mapper.convertToDtoListOfBooking(
             bookingService.getAllBookingForItemsOfOwnerWithState(userId, state, from, size));

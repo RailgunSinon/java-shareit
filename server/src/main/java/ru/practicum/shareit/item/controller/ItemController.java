@@ -2,8 +2,6 @@ package ru.practicum.shareit.item.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -35,7 +33,7 @@ public class ItemController {
     private final CommentMapper commentMapper;
 
     @PostMapping
-    public ItemDto addItem(@Valid @RequestBody ItemDto itemDto,
+    public ItemDto addItem(@RequestBody ItemDto itemDto,
         @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.debug("Получен запрос на добавление предмета");
         itemService.isUserExistsOrException(userId);
@@ -75,8 +73,8 @@ public class ItemController {
     @GetMapping("/search")
     public List<ItemDto> getItemsByUserSearch(@RequestParam String text,
         @RequestHeader("X-Sharer-User-Id") Long userId,
-        @RequestParam(defaultValue = "0") @Min(0) Integer from,
-        @RequestParam(defaultValue = "10") @Min(1) Integer size) {
+        @RequestParam(defaultValue = "0") Integer from,
+        @RequestParam(defaultValue = "10") Integer size) {
         log.debug("Получен запрос на получение всех предметов пользователя с id" + userId
             + " и фильтром " + text);
         ArrayList<Item> items = new ArrayList<>(
@@ -87,8 +85,8 @@ public class ItemController {
 
     @GetMapping
     public List<ItemDto> getAllUserItems(@RequestHeader("X-Sharer-User-Id") Long userId,
-        @RequestParam(defaultValue = "0") @Min(0) Integer from,
-        @RequestParam(defaultValue = "10") @Min(1) Integer size) {
+        @RequestParam(defaultValue = "0") Integer from,
+        @RequestParam(defaultValue = "10") Integer size) {
         log.debug("Получен запрос на получение всех предметов пользователя с id" + userId);
         ArrayList<Item> items = new ArrayList<>(itemService.getUserItems(userId, from, size));
         return itemMapper
@@ -96,7 +94,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto addComment(@Valid @RequestBody CommentDto commentDto,
+    public CommentDto addComment(@RequestBody CommentDto commentDto,
         @RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId) {
         log.debug("Получен запрос на добавление комментария от пользователя " + userId);
         Comment comment = commentMapper.convertToEntity(commentDto, userId, itemId);

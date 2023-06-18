@@ -2,13 +2,13 @@ package ru.practicum.shareit.booking.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.ValidationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingOwnerDto;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.exceptions.ValidationException;
 
 @Component
 public class BookingMapper {

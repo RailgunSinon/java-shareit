@@ -109,51 +109,6 @@ public class ItemRequestControllerWebTest {
     }
 
     @Test
-    void addItemRequestBlackDescriptionShouldReturnBadRequest() throws Exception {
-        ItemRequestDto itemRequestDto = new ItemRequestDto(1L, "", 2L,
-            created, null);
-
-        mvc.perform(post("/requests")
-            .header("X-Sharer-User-Id", 1)
-            .content(mapper.writeValueAsString(itemRequestDto))
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is(in(List.of(400))));
-    }
-
-    @Test
-    void addItemRequestBadIdShouldReturnBadRequest() throws Exception {
-        ItemRequestDto itemRequestDto = new ItemRequestDto(-1, "Need Healing",
-            2L, created, null);
-
-        mvc.perform(post("/requests")
-            .header("X-Sharer-User-Id", 1)
-            .content(mapper.writeValueAsString(itemRequestDto))
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is(in(List.of(400))));
-    }
-
-    @Test
-    void addItemRequestRequesterShouldReturnBadRequest() throws Exception {
-        ItemRequestDto itemRequestDto = new ItemRequestDto(1L, "Need Healing",
-            -2L, created, null);
-
-        mvc.perform(post("/requests")
-            .header("X-Sharer-User-Id", 1)
-            .content(mapper.writeValueAsString(itemRequestDto))
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is(in(List.of(400))));
-    }
-
-    @Test
     void addItemRequestShouldReturnAllOk() throws Exception {
         ItemRequestDto itemRequestDto = new ItemRequestDto(1L, "Need Healing",
             1L, created, null);

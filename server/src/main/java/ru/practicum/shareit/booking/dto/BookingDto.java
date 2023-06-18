@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking.dto;
 
 import java.time.LocalDateTime;
-import javax.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,6 @@ import ru.practicum.shareit.user.dto.UserDto;
 @NoArgsConstructor
 public class BookingDto {
 
-    @PositiveOrZero
     long id;
     private ItemDto item;
     private UserDto booker;

@@ -107,20 +107,6 @@ public class BookingControllerWebTest {
     }
 
     @Test
-    void addBookingBadStartTimeShouldReturnBadRequest() throws Exception {
-        BookingRequestDto bookingRequestDto = new BookingRequestDto(1,
-            itemTestMap.get(1L).getId(), curDate.minusMinutes(30), curDate.plusHours(2));
-
-        mvc.perform(post("/bookings").header("X-Sharer-User-Id", 2)
-            .content(mapper.writeValueAsString(bookingRequestDto))
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is(in(List.of(400))));
-    }
-
-    @Test
     void addBookingBadEndTimeShouldReturnBadRequest() throws Exception {
         BookingRequestDto bookingRequestDto = new BookingRequestDto(1,
             itemTestMap.get(1L).getId(), curDate.plusHours(2), curDate.minusHours(2));
@@ -196,13 +182,6 @@ public class BookingControllerWebTest {
             .andExpect(status().isOk());
     }
 
-    @Test
-    void getCurrentBookingForUserShouldReturnBadRequest() throws Exception {
-        mvc.perform(get("/bookings").header("X-Sharer-User-Id", 3)
-        .param("from", String.valueOf(-1)))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is(in(List.of(400))));
-    }
 
     @Test
     void getCurrentBookingForUserShouldReturnOk() throws Exception {
@@ -214,13 +193,6 @@ public class BookingControllerWebTest {
             .andExpect(jsonPath("$", hasSize(4)));
     }
 
-    @Test
-    void getCurrentBookingForOwnerShouldReturnBadRequest() throws Exception {
-        mvc.perform(get("/bookings").header("X-Sharer-User-Id", 1)
-            .param("from", String.valueOf(-1)))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is(in(List.of(400))));
-    }
 
     @Test
     void getCurrentBookingForOwnerShouldReturnOk() throws Exception {

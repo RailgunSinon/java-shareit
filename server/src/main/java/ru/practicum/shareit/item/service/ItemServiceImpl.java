@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +13,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.enums.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exceptions.NotFoundException;
+import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
@@ -71,7 +71,7 @@ public class ItemServiceImpl implements ItemService {
             return new ArrayList<>();
         }
         PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
-        return itemRepository.findByNameOrDescriptionLike(text.toLowerCase(),page);
+        return itemRepository.findByNameOrDescriptionLike(text.toLowerCase(), page);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class ItemServiceImpl implements ItemService {
     public List<Item> getItemsByRequestId(long requestId) {
         log.info("Получение предметов по запросу с id " + requestId);
         PageRequest page = PageRequest.of(0, ITEM_LIST_PAGE_SIZE);
-        return itemRepository.findAllByRequestIdOrderById(requestId,page);
+        return itemRepository.findAllByRequestIdOrderById(requestId, page);
     }
 
     @Override

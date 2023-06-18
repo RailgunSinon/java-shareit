@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +14,7 @@ import ru.practicum.shareit.booking.model.enums.State;
 import ru.practicum.shareit.booking.model.enums.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exceptions.NotFoundException;
+import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -114,13 +114,15 @@ public class BookingServiceImpl implements BookingService {
                     LocalDateTime.now(), page);
             case WAITING:
                 List<Booking> bookingsWait = bookingRepository
-                    .findAllByBookerIdOrderByBookingStartDesc(userId,page);
-                return bookingsWait.stream().filter(booking -> booking.getStatus() == Status.WAITING)
+                    .findAllByBookerIdOrderByBookingStartDesc(userId, page);
+                return bookingsWait.stream()
+                    .filter(booking -> booking.getStatus() == Status.WAITING)
                     .collect(Collectors.toList());
             case REJECTED:
                 List<Booking> bookingsRej = bookingRepository
-                    .findAllByBookerIdOrderByBookingStartDesc(userId,page);
-                return bookingsRej.stream().filter(booking -> booking.getStatus() == Status.REJECTED)
+                    .findAllByBookerIdOrderByBookingStartDesc(userId, page);
+                return bookingsRej.stream()
+                    .filter(booking -> booking.getStatus() == Status.REJECTED)
                     .collect(Collectors.toList());
             default:
                 throw new RuntimeException("Unknown state: " + state);
@@ -154,12 +156,14 @@ public class BookingServiceImpl implements BookingService {
                     .findAllByOwnerIdAndStartAfterAndEndBefore(userId, LocalDateTime.now(), page);
             case WAITING:
                 List<Booking> bookingsWait = bookingRepository.findAllByOwnerId(userId, page);
-                return bookingsWait.stream().filter(booking -> booking.getStatus() == Status.WAITING)
+                return bookingsWait.stream()
+                    .filter(booking -> booking.getStatus() == Status.WAITING)
                     .collect(Collectors.toList());
 
             case REJECTED:
                 List<Booking> bookingsRej = bookingRepository.findAllByOwnerId(userId, page);
-                return bookingsRej.stream().filter(booking -> booking.getStatus() == Status.REJECTED)
+                return bookingsRej.stream()
+                    .filter(booking -> booking.getStatus() == Status.REJECTED)
                     .collect(Collectors.toList());
             default:
                 throw new RuntimeException("Unknown state: " + state);

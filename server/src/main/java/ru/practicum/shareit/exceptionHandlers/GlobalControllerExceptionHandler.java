@@ -1,7 +1,6 @@
 package ru.practicum.shareit.exceptionHandlers;
 
 import java.util.Map;
-import javax.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.exceptionHandlers.Entity.ErrorResponse;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.exceptions.StateNotSupportedException;
+import ru.practicum.shareit.exceptions.ValidationException;
 
 /* Пришлось немного импровизировать. Я уж не буду спрашивать почему у некоторых тестов странные
 Коды ответа, 404 по запрету владельцу возвращать свою вещь - это интересно. Но тут пришлось

@@ -1,8 +1,6 @@
 package ru.practicum.shareit.request.controller;
 
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -33,7 +31,7 @@ public class ItemRequestController {
 
 
     @PostMapping
-    public ItemRequestDto addRequest(@Valid @RequestBody ItemRequestDto itemRequestDto,
+    public ItemRequestDto addRequest(@RequestBody ItemRequestDto itemRequestDto,
         @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.debug("Получен запрос на добавление нового запроса на предмет");
         ItemRequest itemRequest = requestMapper.convertToEntity(itemRequestDto);
@@ -57,8 +55,8 @@ public class ItemRequestController {
     @GetMapping("/all")
     public List<ItemRequestDto> getOtherUsersRequests(
         @RequestHeader("X-Sharer-User-Id") Long userId,
-        @RequestParam(defaultValue = "0") @Min(0) Integer from,
-        @RequestParam(defaultValue = "10") @Min(1) Integer size) {
+        @RequestParam(defaultValue = "0") Integer from,
+        @RequestParam(defaultValue = "10") Integer size) {
         log.debug("Получен запрос на получения запросов на предмет других пользователей");
         return requestMapper
             .convertToDtoListOfItemRequests(

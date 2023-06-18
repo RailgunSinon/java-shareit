@@ -111,7 +111,7 @@ public class ItemControllerWebTest {
         Mockito.when(itemService.getUserItems(1L, 0, 10))
             .thenReturn(List.of(itemTestMap.get(1L)));
         Mockito.when(itemService.getCommentById(1L)).thenReturn(comment);
-        Mockito.when(itemService.isUserAnItemOwner(2L,itemTestMap.get(2L))).thenReturn(true);
+        Mockito.when(itemService.isUserAnItemOwner(2L, itemTestMap.get(2L))).thenReturn(true);
         Mockito.when(bookingService.getItemLastBooking(2L)).thenReturn(booking);
     }
 
@@ -132,36 +132,6 @@ public class ItemControllerWebTest {
             .accept(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk());
-    }
-
-    @Test
-    void addItemBlankNameShouldReturnBadRequest() throws Exception {
-        ItemDto itemDto = new ItemDto(1, "", "Описание дрели", true,
-            null, null, null, null);
-
-        mvc.perform(post("/items")
-            .header("X-Sharer-User-Id", 1)
-            .content(mapper.writeValueAsString(itemDto))
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is(in(List.of(400, 404))));
-    }
-
-    @Test
-    void addItemBlankDescriptionShouldReturnBadRequest() throws Exception {
-        ItemDto itemDto = new ItemDto(1, "Дрель", "", true,
-            null, null, null, null);
-
-        mvc.perform(post("/items")
-            .header("X-Sharer-User-Id", 4)
-            .content(mapper.writeValueAsString(itemDto))
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is(in(List.of(400, 404))));
     }
 
     @Test
@@ -205,7 +175,7 @@ public class ItemControllerWebTest {
             .andExpect(jsonPath("$.id", is(itemTestMap.get(2L).getId()), Long.class))
             .andExpect(jsonPath("$.name", is(itemTestMap.get(2L).getName())))
             .andExpect(jsonPath("$.description", is(itemTestMap.get(2L).getDescription())))
-            .andExpect(jsonPath("$.lastBooking.id",is(booking.getId()), Long.class));
+            .andExpect(jsonPath("$.lastBooking.id", is(booking.getId()), Long.class));
     }
 
     @Test

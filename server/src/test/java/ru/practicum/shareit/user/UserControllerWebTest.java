@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.in;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -71,44 +70,6 @@ public class UserControllerWebTest {
             .andExpect(jsonPath("$.email", is(userTestMap.get(1L).getEmail())));
     }
 
-    @Test
-    void addUserBadEmailShouldReturnBadRequest() throws Exception {
-        UserDto userDto = new UserDto(1, "testUserOne", "testUserOne");
-
-        mvc.perform(post("/users")
-            .content(mapper.writeValueAsString(userDto))
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is(in(List.of(400))));
-    }
-
-    @Test
-    void addUserBlankEmailShouldReturnBadRequest() throws Exception {
-        UserDto userDto = new UserDto(1, "testUserOne", "");
-
-        mvc.perform(post("/users")
-            .content(mapper.writeValueAsString(userDto))
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is(in(List.of(400))));
-    }
-
-    @Test
-    void addUserBlankNameShouldReturnBadRequest() throws Exception {
-        UserDto userDto = new UserDto(1, "", "testUserOne@yandex.ru");
-
-        mvc.perform(post("/users")
-            .content(mapper.writeValueAsString(userDto))
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is(in(List.of(400))));
-    }
 
     @Test
     void updateUserShouldReturnOk() throws Exception {

@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
-import javax.validation.ValidationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +17,7 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
 import ru.practicum.shareit.exceptions.NotFoundException;
+import ru.practicum.shareit.exceptions.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.model.User;
@@ -234,7 +234,7 @@ public class BookingServiceUnitTests {
         bookingService.getAllBookingOfUserWithState(userTestMap.get(1L).getId(), "WAITING",
             0, 10);
         Mockito.verify(mockBookingRepository, Mockito.times(1))
-            .findAllByBookerIdOrderByBookingStartDesc(userTestMap.get(1L).getId(),page);
+            .findAllByBookerIdOrderByBookingStartDesc(userTestMap.get(1L).getId(), page);
     }
 
     @Test
@@ -242,7 +242,7 @@ public class BookingServiceUnitTests {
         bookingService.getAllBookingOfUserWithState(userTestMap.get(1L).getId(), "REJECTED",
             0, 10);
         Mockito.verify(mockBookingRepository, Mockito.times(1))
-            .findAllByBookerIdOrderByBookingStartDesc(userTestMap.get(1L).getId(),page);
+            .findAllByBookerIdOrderByBookingStartDesc(userTestMap.get(1L).getId(), page);
     }
 
     @Test
@@ -310,7 +310,7 @@ public class BookingServiceUnitTests {
         bookingService.getAllBookingForItemsOfOwnerWithState(userTestMap.get(1L).getId(),
             "WAITING", 0, 10);
         Mockito.verify(mockBookingRepository, Mockito.times(1))
-            .findAllByOwnerId(userTestMap.get(1L).getId(),page);
+            .findAllByOwnerId(userTestMap.get(1L).getId(), page);
     }
 
     @Test
@@ -319,7 +319,7 @@ public class BookingServiceUnitTests {
             "REJECTED", 0, 10);
 
         Mockito.verify(mockBookingRepository, Mockito.times(1))
-            .findAllByOwnerId(userTestMap.get(1L).getId(),page);
+            .findAllByOwnerId(userTestMap.get(1L).getId(), page);
     }
 
     @Test
